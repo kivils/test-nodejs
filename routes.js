@@ -1,10 +1,9 @@
-const fs = require('fs');
-
 const routes = (req, res) => {
   const url = req.url;
   const method = req.method;
 
   if(url === '/') {
+    res.setHeader('Content-Type', 'text/html');
     res.write('<html>');
     res.write('<head><title>Hello!</title></head>');
     res.write('<body>' +
@@ -22,6 +21,7 @@ const routes = (req, res) => {
   }
 
   if(url === '/users') {
+    res.setHeader('Content-Type', 'text/html');
     res.write('<html>');
     res.write('<head><title>Our people</title></head>');
     res.write('<body>' +
@@ -56,6 +56,7 @@ const routes = (req, res) => {
         const parsedBody = Buffer.concat(body);
         const message = parsedBody.toString().split('=')[1].split('+').toString().replaceAll(',', ' ');
 
+        res.setHeader('Content-Type', 'text/html');
         res.write('<html>');
         res.write('<head><title>Welcome to the club!</title></head>');
         res.write('<body>' +
