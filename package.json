@@ -1,0 +1,15 @@
+{
+  "name": "test-nodejs",
+  "version": "1.0.0",
+  "description": "This is the project for the course https://www.udemy.com/course/nodejs-the-complete-guide/",
+  "main": "index.js",
+  "author": "Yulia Sesyunina <idwebkivils@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}

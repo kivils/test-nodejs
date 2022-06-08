@@ -13,7 +13,7 @@ const routes = (req, res) => {
         '<form action="/create-user" method="POST">' +
         '<label for="username">Pick a username</label><br/>' +
         '<input type="text" name="username" id="username"/>' +
-        '<button type="submit">Submit</button>' +
+        '<button type="submit">Join us!</button>' +
         '</form>' +
         '</body>');
     res.write('</html>');
@@ -37,7 +37,7 @@ const routes = (req, res) => {
         '<form action="/create-user" method="POST">' +
         '<label for="username">Pick a username</label><br/>' +
         '<input type="text" name="username" id="username"/>' +
-        '<button type="submit">Submit</button>' +
+        '<button type="submit">Join us!</button>' +
         '</form>' +
         '</body>');
     res.write('</html>');
@@ -53,8 +53,8 @@ const routes = (req, res) => {
       });
 
       return req.on('end', () => {
-        const parsedBody = Buffer.concat(body);
-        const message = parsedBody.toString().split('=')[1].split('+').toString().replaceAll(',', ' ');
+        const parsedBody = Buffer.concat(body).toString();
+        const message = parsedBody.split('=')[1].split('+').toString().replaceAll(',', ' ');
 
         res.setHeader('Content-Type', 'text/html');
         res.write('<html>');
