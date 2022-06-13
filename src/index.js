@@ -8,6 +8,8 @@ const usersRouter = require('./routes/user');
 const app = express();
 
 app.use(bodyParser.urlencoded({extended: false}));
+// Define path to static resources
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Routes started with /users
 app.use('/users', usersRouter);

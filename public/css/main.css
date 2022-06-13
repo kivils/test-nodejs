@@ -1,0 +1,39 @@
+/* Sample styles */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li a {
+  display: block;
+  padding: 4px 10px;
+}
+
+li a:hover {
+  text-decoration: none;
+}
+
+li a.active {
+  color: black;
+}
+
+header {
+  background: lavender;
+}
+
+main {
+  padding: 10px ;
+}
