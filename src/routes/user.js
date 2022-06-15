@@ -4,16 +4,16 @@ const path = require('path');
 const rootDir = require('../helpers/path');
 const router = express.Router();
 
-const users = require('../data/users');
+const usersList = require('../data/users');
 
 // in index.js these routes are prefixed with /users
 
 // /users/create-user => POST
 router.post('/create-user', (req, res) => {
-  users.push({
+  usersList.push({
     name: req.body.username
   });
-  res.sendFile(path.join(rootDir, 'views', 'create-user.html'));
+  res.render('create-user', { pageTitle: 'Create user', path: '/users/create-user'});
 })
 
 // /users/create-user => GET
@@ -23,7 +23,7 @@ router.get('/create-user', (req, res) => {
 
 // /users route
 router.use('/', (req, res) => {
-  res.sendFile(path.join(rootDir, 'views', 'users.html'));
+  res.render('users', { pageTitle: 'Users', users: usersList, path: '/users' });
 })
 
 module.exports = router;

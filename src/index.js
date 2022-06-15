@@ -25,6 +25,10 @@ const usersRouter = require('./routes/user');
 
 const app = express();
 
+// Templating engine setup
+app.set('view engine', 'pug');
+app.set('views', 'src/pug/views');
+
 // For frontend live reload
 app.use(connectLivereload());
 
@@ -40,7 +44,7 @@ app.use(defaultRouter);
 app.use((req, res, next) => {
   res
     .status(404)
-    .sendFile(path.join(__dirname, './', 'views', '404.html'));
+    .render('404', { pageTitle: 'Page not found'});
 });
 
 app.listen(3000);

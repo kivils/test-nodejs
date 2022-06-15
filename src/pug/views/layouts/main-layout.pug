@@ -1,0 +1,19 @@
+<!doctype html>
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0")
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+        title #{pageTitle}
+        link(rel="stylesheet", href="/css/main.css")
+        block styles
+    body
+        header
+            nav
+                ul
+                    li
+                        a(href="/", class=(path && path === '/' ? 'active' : '')) Home page
+                    li
+                        a(href="/users", class=(path && (path === '/users' || path === '/users/create-user') ? 'active' : '')) Users
+        main
+            block content
