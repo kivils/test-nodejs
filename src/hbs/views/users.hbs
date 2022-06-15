@@ -1,0 +1,13 @@
+{{#if hasUsers }}
+    <h1>Our people</h1>
+    <p>We have many greate people here, just have a look!</p>
+    <ol>
+        {{#each users }}
+        <li>{{this.name}}</li>
+        {{/each}}
+    </ol>
+{{ else }}
+    <h1>No people here yet</h1>
+{{/if}}
+<h2>Please join us :-)</h2>
+userForm

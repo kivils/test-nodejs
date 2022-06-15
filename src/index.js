@@ -5,6 +5,9 @@ const path = require('path');
 const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
 
+// Handlebars
+const expressHbs = require('express-handlebars');
+
 const publicDirectory = path.join(__dirname, '..', 'public');
 
 // For frontend live reload
@@ -25,9 +28,22 @@ const usersRouter = require('./routes/user');
 
 const app = express();
 
-// Templating engine setup
-app.set('view engine', 'pug');
-app.set('views', 'src/pug/views');
+// TEMPLATING ENGINE SETUP:
+//// pug
+// app.set('view engine', 'pug');
+// app.set('views', 'src/pug/views');
+
+// express-handlebars
+app.engine(
+  'hbs',
+  expressHbs({
+    layoutsDir: 'src/hbs/views/layouts',
+    defaultLayout: 'main',
+    extname: 'hbs'
+  })
+);
+app.set('view engine', 'hbs');
+app.set('views', 'src/hbs/views');
 
 // For frontend live reload
 app.use(connectLivereload());
