@@ -4,11 +4,15 @@ const path = require('path');
 const rootDir = require('../helpers/path');
 const router = express.Router();
 
+const users = require('../data/users');
+
 // in index.js these routes are prefixed with /users
 
 // /users/create-user => POST
 router.post('/create-user', (req, res) => {
-  console.log(req.body);
+  users.push({
+    name: req.body.username
+  });
   res.sendFile(path.join(rootDir, 'views', 'create-user.html'));
 })
 
