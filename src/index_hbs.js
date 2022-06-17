@@ -2,10 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const mainController = require('./controllers/main');
-
 const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
+
+const expressHbs = require('express-handlebars');
 
 const publicDirectory = path.join(__dirname, '..', 'public');
 
@@ -33,9 +33,16 @@ const app = express();
 /**
  * TEMPLATING ENGINE SETUP:
  */
-app.set('view engine', 'ejs');
-app.set('views', 'src/views/ejs/views');
-
+app.engine(
+  'hbs',
+  expressHbs({
+    layoutsDir: 'src/views/hbs/views/layouts',
+    defaultLayout: 'main',
+    extname: 'hbs'
+  })
+);
+app.set('view engine', 'hbs');
+app.set('views', 'src/views/hbs/views');
 
 /**
  * !!! FOR FRONTEND LIVE RELOAD
@@ -44,18 +51,18 @@ app.use(connectLivereload());
 //
 
 app.use(bodyParser.urlencoded({extended: false}));
-/**
- * Define path to static resources
- */
+// Define path to static resources
 app.use(express.static(publicDirectory));
 
-/**
- * Routes started with /users
- */
+// Routes started with /users
 app.use('/users', usersRouter);
 
 app.use(defaultRouter);
 
-app.use(mainController.getPageNotFound);
+app.use((req, res, next) => {
+  res
+    .status(404)
+    .render('404', { path: '', pageTitle: 'Page not found'});
+});
 
 app.listen(3000);

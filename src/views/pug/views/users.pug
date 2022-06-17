@@ -3,7 +3,7 @@ extend layouts/main-layout.pug
 block content
     if users.length > 0
         h1 Our people
-        p We have many 'great people here, just have a look!
+        p We have many great people here, just have a look!
         ol
             each user in users
                 li #{user.name}
