@@ -1,12 +1,12 @@
 const express = require('express');
-const path = require('path');
 
-const rootDir = require('../helpers/path');
 const router = express.Router();
 
 const usersList = require('../data/users');
 
-// in index.js these routes are prefixed with /users
+/**
+ * in index.js these routes are prefixed with /users
+ */
 
 // /users/create-user => POST
 router.post('/create-user', (req, res) => {
@@ -14,21 +14,39 @@ router.post('/create-user', (req, res) => {
     name: req.body.username
   });
 
-  // // pug
-//   res.render(
-//     'create-user',
-// {
-//       pageTitle: 'Create user',
-//       path: '/users/create-user'
-//     }
-//   );
+  /**
+   * PUG
+   */
+  // res.render(
+  //   'create-user',
+  // {
+  //     pageTitle: 'Create user',
+  //     path: '/users/create-user',
+  //     username: req.body.username
+  //   }
+  // );
 
-  // handlebars
+  /**
+   * HANDLEBARS
+   */
+  // res.render(
+  //   'create-user',
+  //   {
+  //     pageTitle: 'Create user',
+  //     activeUsersPage: true,
+  //     username: req.body.username
+  //   }
+  // );
+
+  /**
+   * EJS
+   */
   res.render(
     'create-user',
     {
       pageTitle: 'Create user',
-      activeUsersPage: true
+      path: '/users/create-user',
+      username: req.body.username
     }
   );
 })
@@ -40,19 +58,32 @@ router.get('/create-user', (req, res) => {
 
 // /users route
 router.use('/', (req, res) => {
-  // // pug
+  /**
+   * PUG
+   */
   // res.render('users', {
   //   pageTitle: 'Our people',
   //   users: usersList,
   //   path: '/users'
   // });
 
-  // handlebars
+  /**
+   * HANDLEBARS
+   */
+  // res.render('users', {
+  //   pageTitle: 'Our people',
+  //   users: usersList,
+  //   hasUsers: usersList.length > 0,
+  //   activeUsersPage: true
+  // });
+
+  /**
+   * EJS
+   */
   res.render('users', {
     pageTitle: 'Our people',
     users: usersList,
-    hasUsers: usersList.length > 0,
-    activeUsersPage: true
+    path: '/users'
   });
 })
 

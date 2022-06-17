@@ -1,0 +1,21 @@
+<%- include('../includes/head.ejs') %>
+
+<%- include('../includes/main-nav.ejs') %>
+
+    <main>
+        <% if (users.length > 0) { %>
+        <h1>Our people</h1>
+        <p>We have many 'great people here, just have a look!</p>
+        <ol>
+            <% for (let user of users) { %>
+            <li><%= user.name %></li>
+            <% } %>
+        </ol>
+        <% } else { %>
+        <h1>No people here yet</h1>
+        <% } %>
+        <h2>Please join us :-)</h2>
+        <%- include('../includes/user-form.ejs') %>
+    </main>
+
+<%- include('../includes/footer.ejs') %>
