@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "nodemon src/index.js --ext '*'"
+    "start": "nodemon src/index.js --ext '*' --ignore src/data"
   },
   "devDependencies": {
     "connect-livereload": "^0.6.1",

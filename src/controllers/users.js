@@ -16,6 +16,8 @@ exports.postCreateUsers = (req, res) => {
         username: req.body.username
       }
   );
+
+  user.save();
 }
 
 /**
@@ -24,12 +26,12 @@ exports.postCreateUsers = (req, res) => {
  * @param res
  */
 exports.getUsers = (req, res) => {
-  const usersList = User.fetchAll();
-
-  res.render('users', {
-    pageTitle: 'Our people',
-    users: usersList,
-    path: '/users'
+  User.fetchAll(users => {
+    res.render('users', {
+      pageTitle: 'Our people',
+      users: users,
+      path: '/users'
+    });
   });
 }
 
