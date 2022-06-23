@@ -4,9 +4,6 @@ const path = require('path');
 
 const mainController = require('./controllers/main');
 
-const livereload = require('livereload');
-const connectLivereload = require('connect-livereload');
-
 const publicDirectory = path.join(__dirname, '..', 'public');
 
 /**
@@ -14,6 +11,9 @@ const publicDirectory = path.join(__dirname, '..', 'public');
  * @see https://bytearcher.com/articles/refresh-changes-browser-express-livereload-nodemon/
  * TODO: Check how to get rid of this on production
  */
+const livereload = require('livereload');
+const connectLivereload = require('connect-livereload');
+
 const liveReloadServer = livereload.createServer();
 
 liveReloadServer.watch(publicDirectory);
@@ -38,14 +38,16 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', 'src/views/ejs/views');
 
-
 /**
  * !!! FOR FRONTEND LIVE RELOAD
  */
 app.use(connectLivereload());
-//
 
+/**
+ * Body-parser for requests
+ */
 app.use(bodyParser.urlencoded({extended: false}));
+
 /**
  * Define path to static resources
  */

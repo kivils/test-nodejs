@@ -8,37 +8,37 @@ body {
 ul {
   margin: 0;
   padding: 0;
-}
 
-ul li {
+  li {
     margin: 0;
     padding: 0;
   }
 
-ul a {
+  a {
     display: block;
     padding: 4px 10px;
-  }
 
-ul a:hover {
+    &:hover {
       text-decoration: none;
     }
 
-ul a.active {
+    &.active {
       color: black;
     }
+  }
+}
 
 header {
   background: lavender;
-}
 
-header ul {
+  ul {
     display: flex;
-  }
 
-header ul li {
+    li {
       list-style: none;
     }
+  }
+}
 
 main {
   padding: 10px;
