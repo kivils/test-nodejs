@@ -4,7 +4,7 @@ const rootDir = require('../helpers/path');
 
 const usersData = path.join(rootDir, 'data', 'users.json');
 
-const readUsersFromFile = (cb) => {
+const readUsersFromFile = cb => {
   fs.readFile(usersData, (err, fileContent) => {
     if(err) {
       cb([]);
@@ -25,7 +25,7 @@ module.exports = class User  {
       users.push(this);
 
       fs.writeFile(usersData, JSON.stringify(users), err => {
-        console.log('Error: ', err);
+        console.log('Error saving user: ', err);
       });
     })
   };

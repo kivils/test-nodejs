@@ -1,0 +1,26 @@
+<%- include('../../includes/head') %>
+
+<%- include('../../includes/main-nav') %>
+
+<main>
+    <h1><%= pageTitle %></h1>
+
+    <h2>You can add a new product here</h2>
+    <%- include('../../includes/product-form')%>
+
+    <h2>Products already added</h2>
+    <% if(products.length) {%>
+        <p>You can edit any product</p>
+        <ul>
+            <% products.map(product => { %>
+            <li>
+                <a href="/shop/<%=product.title%>"><%=product.title%></a>
+            </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>No products so far</p>
+    <% } %>
+</main>
+
+<%- include('../../includes/footer') %>

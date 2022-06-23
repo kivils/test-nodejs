@@ -1,8 +1,31 @@
 <header>
     <nav>
         <ul>
-            <li><a class="<%= path === '/' ? 'active' : '' %>" href="/">Home page</a></li>
-            <li><a class="<%= (path === '/users' || path === 'users/create-user') ? 'active' : '' %>" href="/users">Users</a></li>
+            <li>
+                <a class="<%= path === '/' ? 'active' : '' %>" href="/">
+                    Home page
+                </a>
+            </li>
+            <li>
+                <a class="<%= (path === '/shop' || path === 'shop/product') ? 'active' : '' %>" href="/shop">
+                    Shop
+                </a>
+            </li>
+            <li>
+                <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">
+                    Cart
+                </a>
+            </li>
+            <li>
+                <a class="<%= (path === '/admin' || path === '/admin/add-product') ? 'active' : '' %>" href="/admin">
+                    Admin
+                </a>
+            </li>
+            <li>
+                <a class="<%= (path === '/users' || path === 'users/create-user') ? 'active' : '' %>" href="/users">
+                    Users
+                </a>
+            </li>
         </ul>
     </nav>
 </header>

@@ -1,10 +1,15 @@
-<%- include('../includes/head.ejs') %>
+<%- include('../../includes/head.ejs') %>
 
-<%- include('../includes/main-nav.ejs') %>
+<%- include('../../includes/main-nav.ejs') %>
 
     <main>
+        <h1>Hey, nice to see you!</h1>
+
+        <h2>Please join us :-)</h2>
+        <%- include('../../includes/user-form.ejs') %>
+
         <% if (users.length > 0) { %>
-        <h1>Our people</h1>
+        <h2>Our people</h2>
         <p>We have many great people here, just have a look!</p>
         <ol>
             <% for (let user of users) { %>
@@ -14,8 +19,6 @@
         <% } else { %>
         <h1>No people here yet</h1>
         <% } %>
-        <h2>Please join us :-)</h2>
-        <%- include('../includes/user-form.ejs') %>
     </main>
 
-<%- include('../includes/footer.ejs') %>
+<%- include('../../includes/footer.ejs') %>

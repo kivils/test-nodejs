@@ -4,7 +4,13 @@
  * @param res
  */
 exports.getMainPage = (req, res) => {
-  res.render('index', { path: '/', pageTitle: 'Home page' });
+  res.render(
+    'index',
+      {
+        path: '/',
+        pageTitle: 'Home page'
+      }
+  );
 }
 
 /**

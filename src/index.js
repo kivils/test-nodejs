@@ -27,6 +27,8 @@ liveReloadServer.server.once('connection', () => {
 // APP
 const defaultRouter = require('./routes/index');
 const usersRouter = require('./routes/user');
+const shopRouter = require('./routes/shop');
+const adminRouter = require('./routes/admin');
 
 const app = express();
 
@@ -53,6 +55,8 @@ app.use(express.static(publicDirectory));
  * Routes started with /users
  */
 app.use('/users', usersRouter);
+app.use(shopRouter);
+app.use(adminRouter);
 
 app.use(defaultRouter);
 

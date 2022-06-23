@@ -6,14 +6,15 @@ const User = require('../models/user');
  * @param res
  */
 exports.postCreateUsers = (req, res) => {
-  const user = new User(req.body.username);
+  const username = req.body.username;
+  const user = new User(username);
 
   res.render(
-      'create-user',
+      'users/create-user',
       {
         pageTitle: 'Create user',
         path: '/users/create-user',
-        username: req.body.username
+        username: username
       }
   );
 
@@ -27,7 +28,7 @@ exports.postCreateUsers = (req, res) => {
  */
 exports.getUsers = (req, res) => {
   User.fetchAll(users => {
-    res.render('users', {
+    res.render('users/users', {
       pageTitle: 'Our people',
       users: users,
       path: '/users'

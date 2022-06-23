@@ -1,0 +1,21 @@
+<%- include('../../includes/head') %>
+
+<%- include('../../includes/main-nav') %>
+
+<main>
+    <h1><%= pageTitle %></h1>
+
+    <% if(products.length) {%>
+        <ul>
+            <% products.map(product => { %>
+            <li>
+                <a href="/shop/<%=product.title%>"><%=product.title%></a>
+            </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>No products so far</p>
+    <% } %>
+</main>
+
+<%- include('../../includes/footer') %>
