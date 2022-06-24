@@ -1,5 +1,19 @@
-<form action="/admin/add-product" method="POST">
-    <label for="product_title">Product title</label><br>
-    <input type="text" name="product_title" id="product_title" required/>
-    <button type="submit">Add a new product</button>
+<form class="t-product-form" action="/admin/add-product" method="POST">
+    <div class="t-product-form__field">
+        <label class="t-product-form__label" for="product_title">Product title</label>
+        <input class="t-product-form__control" type="text" name="product_title" id="product_title" required/>
+    </div>
+    <div class="t-product-form__field">
+        <label class="t-product-form__label" for="product_description">Product Description</label>
+        <input class="t-product-form__control" type="text" name="product_description" id="product_description" required/>
+    </div>
+    <div class="t-product-form__field">
+        <label class="t-product-form__label" for="product_imgUrl">Product image url</label>
+        <textarea class="t-product-form__control" name="product_imgUrl" id="product_imgUrl"></textarea>
+    </div>
+    <div class="t-product-form__field">
+        <label class="t-product-form__label" for="product_price">Product price</label>
+        <input class="t-product-form__control" type="number" step="0.01" name="product_price" id="product_price" required/>
+    </div>
+    <button class="t-product-form__btn" type="submit">Add a new product</button>
 </form>

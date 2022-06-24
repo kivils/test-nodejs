@@ -3,18 +3,31 @@
 <%- include('../../includes/main-nav') %>
 
 <main>
-    <h1><%= pageTitle %></h1>
+    <h1 class="l-title"><%= pageTitle %></h1>
 
     <% if(products.length) {%>
-        <ul>
+        <ul class="t-products">
             <% products.map(product => { %>
-            <li>
-                <a href="/shop/<%=product.title%>"><%=product.title%></a>
+            <li class="t-products__item">
+                <a class="t-products__link" href="/shop/<%=product.title%>">
+                    <h2 class="t-products__title"><%=product.title%></h2>
+                    <div class="t-products__img-wrapper">
+                        <img class="t-products__img" src="<%= product.imgUrl || 'https://cdn.pixabay.com/photo/2013/07/12/18/22/t-shirt-153370_960_720.png' %>" alt="<%= product.title %>"/>
+                    </div>
+                    <p class="t-products__price">
+                        $<%= product.price %>
+                    </p>
+                    <div class="t-products__actions">
+                        <form action="/admin/add-to-cart" method="POST">
+                            <button>Add to cart</button>
+                        </form>
+                    </div>
+                </a>
             </li>
             <% }) %>
         </ul>
     <% } else { %>
-        <p>No products so far</p>
+        <p class="l-parargaph">No products so far</p>
     <% } %>
 </main>
 

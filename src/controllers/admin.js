@@ -7,19 +7,43 @@ const Product = require('../models/product');
  */
 exports.postAddProduct = (req, res) => {
   const title = req.body.product_title;
-  const product = new Product(title);
+  const description = req.body.product_description;
+  const imgUrl = req.body.product_imgUrl;
+  const price = req.body.product_price;
+  const product = new Product(title, description, imgUrl, price);
 
   res.render(
       'admin/add-product',
       {
         pageTitle: 'New product added: ' + title,
         title: title,
+        description: description,
+        imgUrl: imgUrl,
+        price: price,
         path: '/admin/add-product'
       }
   );
 
   product.save();
 };
+
+/**
+ * Edit product
+ * @param req
+ * @param res
+ */
+exports.getEditProduct = (req, res) => {
+
+}
+
+/**
+ * Delete product
+ * @param req
+ * @param res
+ */
+exports.postDeleteProduct = (req, res) => {
+
+}
 
 /**
  * Product list in admin area

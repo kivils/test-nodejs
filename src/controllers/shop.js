@@ -29,7 +29,7 @@ exports.getCart = (req, res) => {
   res.render('shop/cart', {
     pageTitle: 'Your shopping cart',
     items: cart,
-    path: '/cart'
+    path: '/shop/cart'
   });
 }
 
@@ -41,6 +41,18 @@ exports.getCart = (req, res) => {
 exports.getCheckout = (req, res) => {
   res.render('shop/checkout', {
     pageTitle: 'You are one step away from having pour amazing products!',
-    path: '/checkout'
+    path: '/shop/checkout'
+  });
+}
+
+/**
+ * Orders page
+ * @param req
+ * @param res
+ */
+exports.getOrders = (req, res) => {
+  res.render('shop/orders', {
+    pageTitle: 'Your orders',
+    path: '/shop/orders'
   });
 }

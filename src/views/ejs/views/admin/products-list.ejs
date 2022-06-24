@@ -3,18 +3,37 @@
 <%- include('../../includes/main-nav') %>
 
 <main>
-    <h1><%= pageTitle %></h1>
+    <h1 class="l-title"><%= pageTitle %></h1>
 
     <h2>You can add a new product here</h2>
     <%- include('../../includes/product-form')%>
 
     <h2>Products already added</h2>
     <% if(products.length) {%>
-        <p>You can edit any product</p>
-        <ul>
+        <p class="l-paragraph">You can edit any product</p>
+        <ul class="t-products">
             <% products.map(product => { %>
-            <li>
-                <a href="/shop/<%=product.title%>"><%=product.title%></a>
+            <li class="t-products__item">
+                <a class="t-products__link" href="/shop/<%=product.title%>">
+                    <h2 class="t-products__title"><%=product.title%></h2>
+                    <div class="t-products__img-wrapper">
+                        <img class="t-products__img" src="<%= product.imgUrl || 'https://cdn.pixabay.com/photo/2013/07/12/18/22/t-shirt-153370_960_720.png' %>" alt="<%= product.title %>"/>
+                    </div>
+                    <p class="t-products__description">
+                        <%= product.description %>
+                    </p>
+                    <p class="t-products__price">
+                        $<%= product.price %>
+                    </p>
+                    <div class="t-products__actions">
+                        <form action="/admin/edit-product" method="POST">
+                            <button type="submit">Edit</button>
+                        </form>
+                        <form action="/admin/delete-product" method="POST">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
+                </a>
             </li>
             <% }) %>
         </ul>
