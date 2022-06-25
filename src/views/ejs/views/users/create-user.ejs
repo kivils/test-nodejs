@@ -1,10 +1,22 @@
-<%- include('../../includes/head.ejs') %>
+<%- include('../../includes/head') %>
 
-<%- include('../../includes/main-nav.ejs') %>
+<%- include('../../includes/main-nav') %>
 
-    <main>
-        <h1>Wow <span style="color: green;"><%= username %></span>! Welcome to the club :-) !</h1>
-        <p>Now you are <a href="/users">one of us</a>!</p>
-    </main>
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-900">
+            Wow <span style="color: green;"><%= username %></span>! Welcome to the club :-) !
+        </h1>
+    </div>
+</header>
+<main>
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <p class="mb-4">
+                Now you are <a href="/users">one of us</a>!
+            </p>
+        </div>
+    </div>
+</main>
 
-<%- include('../../includes/footer.ejs') %>
+<%- include('../../includes/footer') %>

@@ -1,19 +1,19 @@
-<form class="t-product-form" action="/admin/add-product" method="POST">
-    <div class="t-product-form__field">
-        <label class="t-product-form__label" for="product_title">Product title</label>
-        <input class="t-product-form__control" type="text" name="product_title" id="product_title" required/>
+<form class="block p-6 rounded-lg shadow-lg bg-white mb-8" action="/admin/add-product" method="POST">
+    <div class="form-group mb-4">
+        <label class="block mb-1" for="product_title">Product title</label>
+        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="product_title" id="product_title" required/>
     </div>
-    <div class="t-product-form__field">
-        <label class="t-product-form__label" for="product_description">Product Description</label>
-        <input class="t-product-form__control" type="text" name="product_description" id="product_description" required/>
+    <div class="form-group mb-4">
+        <label class="block mb-1" for="product_description">Product Description</label>
+        <textarea class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" name="product_description" id="product_description"></textarea>
     </div>
-    <div class="t-product-form__field">
-        <label class="t-product-form__label" for="product_imgUrl">Product image url</label>
-        <textarea class="t-product-form__control" name="product_imgUrl" id="product_imgUrl"></textarea>
+    <div class="form-group mb-4">
+        <label class="block mb-1" for="product_imgUrl">Product image url</label>
+        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="product_imgUrl" id="product_imgUrl" required/>
     </div>
-    <div class="t-product-form__field">
-        <label class="t-product-form__label" for="product_price">Product price</label>
-        <input class="t-product-form__control" type="number" step="0.01" name="product_price" id="product_price" required/>
+    <div class="form-group mb-4">
+        <label class="block mb-1" for="product_price">Product price</label>
+        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="number" step="0.01" name="product_price" id="product_price" required/>
     </div>
-    <button class="t-product-form__btn" type="submit">Add a new product</button>
+    <button class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">Add a new product</button>
 </form>

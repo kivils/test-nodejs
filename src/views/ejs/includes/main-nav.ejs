@@ -1,36 +1,32 @@
 <header>
-    <nav>
-        <ul>
-            <li>
-                <a class="<%= path === '/' ? 'active' : '' %>" href="/">
-                    Home page
-                </a>
-            </li>
-            <li>
-                <a class="<%= (path === '/shop' || path === 'shop/product') ? 'active' : '' %>" href="/shop">
-                    Shop
-                </a>
-            </li>
-            <li>
-                <a class="<%= path === '/shop/cart' ? 'active' : '' %>" href="/shop/cart">
-                    Cart
-                </a>
-            </li>
-            <li>
-                <a class="<%= path === '/shop/orders' ? 'active' : '' %>" href="/shop/orders">
-                    Orders
-                </a>
-            </li>
-            <li>
-                <a class="<%= (path === '/admin' || path === '/admin/add-product') ? 'active' : '' %>" href="/admin">
-                    Admin
-                </a>
-            </li>
-            <li>
-                <a class="<%= (path === '/users' || path === 'users/create-user') ? 'active' : '' %>" href="/users">
-                    Users
-                </a>
-            </li>
-        </ul>
+    <nav class="bg-gray-800">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div class="relative flex items-center justify-between h-16">
+                <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+                    <div class="">
+                        <div class="flex space-x-4">
+                            <a href="/" class="<%= path === '/' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' %> px-3 py-2 rounded-md text-sm font-medium" aria-current="page">
+                                Homepage
+                            </a>
+                            <a href="/shop" class="<%= (path === '/shop' || path === 'shop/product') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' %> px-3 py-2 rounded-md text-sm font-medium">
+                                Shop
+                            </a>
+                            <a href="/shop/cart" class="<%= path === '/shop/cart' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' %> px-3 py-2 rounded-md text-sm font-medium">
+                                Cart
+                            </a>
+                            <a href="/shop/orders" class="<%= path === '/shop/orders' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' %> px-3 py-2 rounded-md text-sm font-medium">
+                                Orders
+                            </a>
+                            <a href="/admin" class="<%= path === '/admin' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' %> px-3 py-2 rounded-md text-sm font-medium">
+                                Admin
+                            </a>
+                            <a href="/users" class="<%= (path === '/users' || path === 'users/create-user') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' %> px-3 py-2 rounded-md text-sm font-medium">
+                                Users
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </nav>
 </header>

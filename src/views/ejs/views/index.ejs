@@ -1,23 +1,31 @@
-<%- include('../includes/head.ejs') %>
+<%- include('../includes/head') %>
 
-<%- include('../includes/main-nav.ejs') %>
+<%- include('../includes/main-nav') %>
 
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-900">Hey, nice to see you!</h1>
+    </div>
+</header>
 <main>
-    <h1>Hey, nice to see you!</h1>
-    This is a place where you can easily
-    <ul>
-        <li>
-            <a href="/shop">check, choose and purchase our amazing products</a>
-        </li>
-        <li>
-            <a href="/users">register here</a>
-        </li>
-        <li>
-            <a href="/users">see other users here</a>
-        </li>
-    </ul>
-    <h2>Our most popular items here</h2>
-    <p>TODO: Add product list</p>
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <h2 class="font-sans text-xl text-gray-900 mb-4">This is a place where you can easily:</h2>
+            <ul class="list-disc list-inside mb-4">
+                <li>
+                    <a href="/shop">check, choose and purchase our amazing products</a>
+                </li>
+                <li>
+                    <a href="/users">register here</a>
+                </li>
+                <li>
+                    <a href="/users">see other users here</a>
+                </li>
+            </ul>
+            <h2 class="font-sans text-xl text-gray-900 mb-4">Our most popular items here</h2>
+            <p class="mb-4">TODO: Add product list</p>
+        </div>
+    </div>
 </main>
 
-<%- include('../includes/footer.ejs') %>
+<%- include('../includes/footer') %>

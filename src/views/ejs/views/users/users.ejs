@@ -1,24 +1,33 @@
-<%- include('../../includes/head.ejs') %>
+<%- include('../../includes/head') %>
 
-<%- include('../../includes/main-nav.ejs') %>
+<%- include('../../includes/main-nav') %>
 
-    <main>
-        <h1>Hey, nice to see you!</h1>
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-900">
+            Hey, nice to see you!
+        </h1>
+    </div>
+</header>
+<main>
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <h2 class="font-sans text-xl text-gray-900 mb-4">Please join us :-)</h2>
+            <%- include('../../includes/user-form.ejs') %>
 
-        <h2>Please join us :-)</h2>
-        <%- include('../../includes/user-form.ejs') %>
-
-        <% if (users.length > 0) { %>
-        <h2>Our people</h2>
-        <p>We have many great people here, just have a look!</p>
-        <ol>
-            <% for (let user of users) { %>
-            <li><%= user.name %></li>
+            <% if (users.length > 0) { %>
+                <h2 class="font-sans text-xl text-gray-900 mb-4">Our people</h2>
+                <p class="mb-4">We have many great people here, just have a look!</p>
+                <ol class="list-decimal list-inside mb-4">
+                    <% for (let user of users) { %>
+                        <li><%= user.name %></li>
+                    <% } %>
+                </ol>
+            <% } else { %>
+                <h2 class="font-sans text-xl text-gray-900 mb-4">No people here yet</h2>
             <% } %>
-        </ol>
-        <% } else { %>
-        <h1>No people here yet</h1>
-        <% } %>
-    </main>
+        </div>
+    </div>
+</main>
 
-<%- include('../../includes/footer.ejs') %>
+<%- include('../../includes/footer') %>

@@ -1,10 +1,18 @@
-<%- include('../../includes/head.ejs') %>
+<%- include('../../includes/head') %>
 
-<%- include('../../includes/main-nav.ejs') %>
+<%- include('../../includes/main-nav') %>
 
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-900">New product <span style="color: green;"><%= title %></span> is added</h1>
+    </div>
+</header>
 <main>
-    <h1>New product <span style="color: green;"><%= title %></span> is added</h1>
-    <p>Please check out <a href="/shop">our amazing catalog</a></p>
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <p>Please check out <a href="/shop">our amazing catalog</a></p>
+        </div>
+    </div>
 </main>
 
-<%- include('../../includes/footer.ejs') %>
+<%- include('../../includes/footer') %>
