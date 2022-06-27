@@ -35,11 +35,28 @@ exports.postAddProduct = (req, res) => {
  * @param res
  */
 exports.getEditProduct = (req, res) => {
-  const id = req.body.product_id;
-  const title = req.body.product_title;
-  const description = req.body.product_description;
-  const imgUrl = req.body.product_imgUrl;
-  const price = req.body.product_price;
+  // const editMode = req.query.edit;
+  const productId = req.params.productId;
+
+  // if(!editMode) {
+  //   return res.redirect('/shop');
+  // }
+
+  Product.findById(productId, product => {
+    if(!product) {
+      return res.redirect('/shop');
+    }
+
+    res.render(
+        'admin/edit-product',
+        {
+          pageTitle: 'Update product: ' + product.title,
+          path: '/admin/edit-product',
+          product: product,
+          editing: true
+        }
+    )
+  });
 }
 
 /**
@@ -53,6 +70,13 @@ exports.postDeleteProduct = (req, res) => {
   const description = req.body.product_description;
   const imgUrl = req.body.product_imgUrl;
   const price = req.body.product_price;
+
+  res.render(
+      '/admin/delete-product',
+      {
+
+      }
+  )
 }
 
 /**
@@ -67,7 +91,8 @@ exports.getAdminProducts = (req, res) => {
         {
           pageTitle: 'Your admin area for our amazing shop',
           path: '/admin',
-          products: products
+          products: products,
+          editing: false
         }
     );
   });

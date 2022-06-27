@@ -1,6 +1,18 @@
 /**
   Product card
  */
+.t-products__itemInner {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  height: 100%;
+  transition: transform .2s;
+
+  &:hover {
+    transform: scale(1.025);
+  }
+}
+
 .t-products__link {
   display: flex;
   flex-direction: column;
@@ -8,11 +20,6 @@
   height: 100%;
   color: inherit;
   text-decoration: none;
-  transition: transform .2s;
-
-  &:hover {
-    transform: scale(1.025);
-  }
 }
 
 .t-products__title {

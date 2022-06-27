@@ -2,19 +2,21 @@
     <input type="hidden" name="product_id" id="product_id" value="<%- Math.random().toString().substring(0, 8) %>"/>
     <div class="form-group mb-4">
         <label class="block mb-1" for="product_title">Product title</label>
-        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="product_title" id="product_title" required/>
+        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="product_title" id="product_title" required value="<%= product && product.title %>"/>
     </div>
     <div class="form-group mb-4">
         <label class="block mb-1" for="product_description">Product Description</label>
-        <textarea class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" name="product_description" id="product_description"></textarea>
+        <textarea class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" name="product_description" id="product_description"><%= product && product.description %></textarea>
     </div>
     <div class="form-group mb-4">
         <label class="block mb-1" for="product_imgUrl">Product image url</label>
-        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="product_imgUrl" id="product_imgUrl" required/>
+        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="product_imgUrl" id="product_imgUrl" required value="<%= product && product.imgUrl %>"/>
     </div>
     <div class="form-group mb-4">
         <label class="block mb-1" for="product_price">Product price</label>
-        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="number" step="0.01" name="product_price" id="product_price" required/>
+        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="number" step="0.01" name="product_price" id="product_price" required value="<%= product && product.price %>"/>
     </div>
-    <button class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">Add a new product</button>
+    <button class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">
+        <% if(editing) { %>Update product<% } else { %>Add a new product<% } %>
+    </button>
 </form>
