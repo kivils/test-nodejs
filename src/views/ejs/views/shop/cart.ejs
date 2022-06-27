@@ -10,9 +10,18 @@
 <main>
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
-            <p class="mb-4">
-                Content
-            </p>
+            <div class="mb-4">
+                <% if(cart.products && cart.products.length) { %>
+                    <div>
+                        <% cart.products.map( item => { %>
+                          <p><%= item.id %>: x <%= item.qty %></p>
+                        <% }) %>
+                        <p>Total price: <%= cart.totalPrice %></p>
+                    </div>
+                <% } else { %>
+                    <p>no</p>
+                <% } %>
+            </div>
         </div>
     </div>
 </main>

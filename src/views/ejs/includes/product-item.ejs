@@ -1,0 +1,26 @@
+<a class="t-products__link bg-white shadow-xl rounded p-4" href="/shop/<%= product.id %>">
+    <h2 class="text-gray-900 text-lg mb-4"><%=product.title%></h2>
+    <div class="t-products__img-wrapper mb-4">
+        <img class="t-products__img" src="<%= product.imgUrl || 'https://cdn.pixabay.com/photo/2013/07/12/18/22/t-shirt-153370_960_720.png' %>" alt="<%= product.title %>"/>
+    </div>
+    <p class="t-products__description text-gray-500 mb-4">
+        <%= product.description %>
+    </p>
+    <p class="t-products__price text-lg font-bold text-gray-800">
+        $<%= product.price %>
+    </p>
+    <div class="t-products__actions flex mt-4">
+        <% if(isAdmin) { %>
+            <form class="flex-1" action="/admin/edit-product?<%= product.id %>" method="POST">
+                <button class="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">Edit</button>
+            </form>
+            <form class="flex-1 ml-1" action="/admin/delete-product?<%= product.id %>" method="POST">
+                <button class="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">Delete</button>
+            </form>
+        <% } else { %>
+            <div class="flex-1 ml-4">
+                <%- include('./add-to-cart-btn', {id: product.id} ) %>
+            </div>
+        <% } %>
+    </div>
+</a>

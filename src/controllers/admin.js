@@ -6,16 +6,18 @@ const Product = require('../models/product');
  * @param res
  */
 exports.postAddProduct = (req, res) => {
+  const id = req.body.product_id;
   const title = req.body.product_title;
   const description = req.body.product_description;
   const imgUrl = req.body.product_imgUrl;
   const price = req.body.product_price;
-  const product = new Product(title, description, imgUrl, price);
+  const product = new Product(id, title, description, imgUrl, price);
 
   res.render(
       'admin/add-product',
       {
         pageTitle: 'New product added: ' + title,
+        id: id,
         title: title,
         description: description,
         imgUrl: imgUrl,
@@ -33,7 +35,11 @@ exports.postAddProduct = (req, res) => {
  * @param res
  */
 exports.getEditProduct = (req, res) => {
-
+  const id = req.body.product_id;
+  const title = req.body.product_title;
+  const description = req.body.product_description;
+  const imgUrl = req.body.product_imgUrl;
+  const price = req.body.product_price;
 }
 
 /**
@@ -42,7 +48,11 @@ exports.getEditProduct = (req, res) => {
  * @param res
  */
 exports.postDeleteProduct = (req, res) => {
-
+  const id = req.body.product_id;
+  const title = req.body.product_title;
+  const description = req.body.product_description;
+  const imgUrl = req.body.product_imgUrl;
+  const price = req.body.product_price;
 }
 
 /**

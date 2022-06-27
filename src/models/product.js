@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const rootDir = require('../helpers/path');
 
-const productsData = path.join(rootDir, 'data', 'products.json')
+const productsData = path.join(rootDir, 'data', 'products.json');
 
 const readProductsFromFile = cb => {
   fs.readFile(productsData, (err, fileContent) => {
@@ -16,7 +16,8 @@ const readProductsFromFile = cb => {
 };
 
 module.exports = class Product {
-  constructor(title, description, imgUrl, price) {
+  constructor(id, title, description, imgUrl, price) {
+    this.id = id;
     this.title = title;
     this.description = description;
     this.imgUrl = imgUrl;
@@ -41,5 +42,12 @@ module.exports = class Product {
 
   static fetchProducts(cb) {
     readProductsFromFile(cb);
+  }
+
+  static findById(id, cb) {
+    readProductsFromFile(products => {
+      const product = products.find(p => p.id === id);
+      cb(product);
+    });
   }
 };

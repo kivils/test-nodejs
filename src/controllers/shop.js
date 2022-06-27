@@ -1,6 +1,5 @@
 const Product = require('../models/product');
-
-const cart = [];
+const Cart = require('../models/cart');
 
 /**
  * List of all products
@@ -20,16 +19,54 @@ exports.getProducts = (req, res) => {
   });
 };
 
+exports.getProduct = (req, res) => {
+  const productId = req.params.productId;
+  Product.findById(productId, product => {
+    res.render(
+        'shop/product-card',
+        {
+          pageTitle: product.title,
+          path: '/shop',
+          product: product
+        }
+    );
+  });
+}
+
 /**
  * Product cart
  * @param req
  * @param res
  */
 exports.getCart = (req, res) => {
-  res.render('shop/cart', {
-    pageTitle: 'Your shopping cart',
-    items: cart,
-    path: '/shop/cart'
+  Cart.fetchCartItems(cart => {
+      res.render('shop/cart', {
+        pageTitle: 'Your shopping cart',
+        cart: cart,
+        path: '/shop/cart'
+      });
+  });
+}
+
+/**
+ * Add to cart by POST
+ * @param req
+ * @param res
+ */
+exports.addPostCart = (req, res) => {
+  const productId = req.body.product_id;
+
+  Product.findById(productId, product => {
+    Cart.addProduct(productId, product.price);
+
+    // TODO: Fix: Add callback
+    Cart.fetchCartItems(cart => {
+      res.render('shop/cart', {
+        pageTitle: 'Your shopping cart',
+        cart: cart,
+        path: '/shop/cart'
+      });
+    });
   });
 }
 
