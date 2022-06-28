@@ -6,23 +6,29 @@ const Product = require('../models/product');
  * @param res
  */
 exports.postAddProduct = (req, res) => {
-  const id = req.body.product_id;
-  const title = req.body.product_title;
-  const description = req.body.product_description;
-  const imgUrl = req.body.product_imgUrl;
-  const price = req.body.product_price;
-  const product = new Product(id, title, description, imgUrl, price);
+  const {
+    product_id,
+    product_title,
+    product_description,
+    product_imgUrl,
+    product_price
+  } = req.body;
+
+  const product = new Product(
+    product_id,
+    product_title,
+    product_description,
+    product_imgUrl,
+    product_price
+  );
 
   res.render(
       'admin/add-product',
       {
-        pageTitle: 'New product added: ' + title,
-        id: id,
-        title: title,
-        description: description,
-        imgUrl: imgUrl,
-        price: price,
-        path: '/admin/add-product'
+      pageTitle: 'New product added: ' + product_title,
+      product: product,
+      path: '/admin/add-product',
+      editing: false
       }
   );
 
@@ -30,17 +36,12 @@ exports.postAddProduct = (req, res) => {
 };
 
 /**
- * Edit product
+ * Edit product: form with pre-populated values
  * @param req
  * @param res
  */
 exports.getEditProduct = (req, res) => {
-  // const editMode = req.query.edit;
   const productId = req.params.productId;
-
-  // if(!editMode) {
-  //   return res.redirect('/shop');
-  // }
 
   Product.findById(productId, product => {
     if(!product) {
@@ -48,36 +49,72 @@ exports.getEditProduct = (req, res) => {
     }
 
     res.render(
-        'admin/edit-product',
-        {
-          pageTitle: 'Update product: ' + product.title,
-          path: '/admin/edit-product',
-          product: product,
-          editing: true
-        }
+      'admin/edit-product',
+      {
+        pageTitle: 'Update product: ' + product.title,
+        path: '/admin/edit-product',
+        product: product,
+        editing: true
+      }
     )
   });
-}
+};
+
+/**
+ * Post edit product
+ * @param req
+ * @param res
+ */
+exports.postEditProduct = (req, res) => {
+  const {
+    product_id,
+    product_title,
+    product_description,
+    product_imgUrl,
+    product_price
+  } = req.body;
+
+  const updatedProduct = new Product(
+    product_id,
+    product_title,
+    product_description,
+    product_imgUrl,
+    product_price
+  );
+
+  updatedProduct.save();
+
+  res.render(
+    'admin/edit-product',
+    {
+      pageTitle: 'Product ' + product_title + ' updated',
+      product: updatedProduct,
+      path: '/admin/edit-product',
+      editing: true
+    }
+  );
+};
 
 /**
  * Delete product
  * @param req
  * @param res
  */
-exports.postDeleteProduct = (req, res) => {
-  const id = req.body.product_id;
-  const title = req.body.product_title;
-  const description = req.body.product_description;
-  const imgUrl = req.body.product_imgUrl;
-  const price = req.body.product_price;
+exports.getDeleteProduct = (req, res) => {
+  const productId = req.params.productId;
 
-  res.render(
-      '/admin/delete-product',
+  Product.deleteById(productId, title => {
+    res.render(
+      'admin/delete-product',
       {
-
+        pageTitle: 'Product deleted',
+        path: '/admin/delete-product',
+        title: title
       }
-  )
-}
+    );
+  });
+
+};
 
 /**
  * Product list in admin area
@@ -87,13 +124,13 @@ exports.postDeleteProduct = (req, res) => {
 exports.getAdminProducts = (req, res) => {
   Product.fetchProducts(products => {
     res.render(
-        'admin/products-list',
-        {
-          pageTitle: 'Your admin area for our amazing shop',
-          path: '/admin',
-          products: products,
-          editing: false
-        }
+      'admin/products-list',
+      {
+        pageTitle: 'Your admin area for our amazing shop',
+        path: '/admin',
+        products: products,
+        editing: false
+      }
     );
   });
 };

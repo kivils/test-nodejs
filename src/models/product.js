@@ -24,30 +24,59 @@ module.exports = class Product {
     this.price = price;
   };
 
+  /**
+   * Add new product and update existing product
+   */
   save() {
     readProductsFromFile(products => {
-      const isProductExists = products.some(product => product.title === this.title);
-      if(!isProductExists) {
+      const existingProductIndex = products.find(product => product.id === this.id);
+
+      // if product exists - edit product
+      if(existingProductIndex) {
+        const updatedProducts = [ ...products ];
+
+        updatedProducts[existingProductIndex] = this;
+
+        fs.writeFile(productsData, JSON.stringify(updatedProducts), err => {
+          console.log('Error saving product: ', err);
+        });
+      }
+      // Add a new product
+      else {
         products.push(this);
 
         fs.writeFile(productsData, JSON.stringify(products), err => {
           console.log('Error saving product: ', err);
         });
       }
-      else {
-        console.log(['Product already exists'])
-      }
+    });
+  };
+
+  /**
+   * Delete product
+   */
+  static deleteById(id, cb) {
+    readProductsFromFile(products => {
+      const deletedProduct = products.find(product => product.id === id);
+      const deletedTitle = deletedProduct.title;
+      const updatedProducts = products.filter(product => product.id !== id);
+
+      fs.writeFile(productsData, JSON.stringify(updatedProducts), err => {
+        console.log('Error deleting product: ', err);
+      });
+
+      cb(deletedTitle);
     });
   };
 
   static fetchProducts(cb) {
     readProductsFromFile(cb);
-  }
+  };
 
   static findById(id, cb) {
     readProductsFromFile(products => {
       const product = products.find(p => p.id === id);
       cb(product);
     });
-  }
+  };
 };
