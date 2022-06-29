@@ -4,6 +4,8 @@ const rootDir = require('../helpers/path');
 
 const productsData = path.join(rootDir, 'data', 'products.json');
 
+const Cart = require('./cart');
+
 const readProductsFromFile = cb => {
   fs.readFile(productsData, (err, fileContent) => {
     if(err) {
@@ -58,21 +60,30 @@ module.exports = class Product {
   static deleteById(id, cb) {
     readProductsFromFile(products => {
       const deletedProduct = products.find(product => product.id === id);
-      const deletedTitle = deletedProduct.title;
       const updatedProducts = products.filter(product => product.id !== id);
 
       fs.writeFile(productsData, JSON.stringify(updatedProducts), err => {
+        Cart.deleteProduct(id, deletedProduct.price);
         console.log('Error deleting product: ', err);
       });
 
-      cb(deletedTitle);
+      cb(deletedProduct.title);
     });
   };
 
+  /**
+   * Fetch all products
+   * @param cb
+   */
   static fetchProducts(cb) {
     readProductsFromFile(cb);
   };
 
+  /**
+   * Find product by id
+   * @param id
+   * @param cb
+   */
   static findById(id, cb) {
     readProductsFromFile(products => {
       const product = products.find(p => p.id === id);

@@ -11,13 +11,75 @@
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
             <div class="mb-4">
-                <% if(cart.products && cart.products.length) { %>
-                    <div>
-                        <% cart.products.map( item => { %>
-                          <p><%= item.id %>: x <%= item.qty %></p>
-                        <% }) %>
-                        <p>Total price: <%= cart.totalPrice %></p>
-                    </div>
+                <% if(products && products.length) { %>
+                    <table class="min-w-full mb-4">
+                        <thead class="bg-white border-b">
+                        <tr>
+                            <th scope="col" class="text-sm font-medium px-6 py-4 text-left w-1.5">
+                                #
+                            </th>
+                            <th scope="col" class="text-sm font-medium px-6 py-4 text-left">
+                                Title
+                            </th>
+                            <th scope="col" class="text-sm font-medium px-6 py-4 text-right">
+                                Quantity
+                            </th>
+                            <th scope="col" class="text-sm font-medium px-6 py-4 text-right">
+                                Price
+                            </th>
+                            <th scope="col" class="text-sm font-medium px-6 py-4 text-right">
+                                Total
+                            </th>
+                            <th scope="col" class="text-sm font-medium px-6 py-4 text-right">
+
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <% products.map( (item, index) => { %>
+                            <tr class="<% if(index % 2) { %>bg-white <% } else { %>bg-gray-100<% } %> border-b">
+                                <td class="text-sm font-light px-6 py-4 text-left w-1.5">
+                                    <%= index + 1 %>
+                                </td>
+                                <td class="text-sm font-light px-6 py-4 text-left">
+                                    <a href="/product/<%= item.productsData.id %>"><%= item.productsData.title %></a>
+                                </td>
+                                <td class="text-sm font-light px-6 py-4 text-right align-middle">
+                                    <%= item.productQty %>
+                                    <button class="align-middle hover:opacity-50">
+                                        <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.002 2c5.518 0 9.998 4.48 9.998 9.998 0 5.517-4.48 9.997-9.998 9.997-5.517 0-9.997-4.48-9.997-9.997 0-5.518 4.48-9.998 9.997-9.998zm0 1.5c-4.69 0-8.497 3.808-8.497 8.498s3.807 8.497 8.497 8.497 8.498-3.807 8.498-8.497-3.808-8.498-8.498-8.498zm-.747 7.75h-3.5c-.414 0-.75.336-.75.75s.336.75.75.75h3.5v3.5c0 .414.336.75.75.75s.75-.336.75-.75v-3.5h3.5c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-3.5v-3.5c0-.414-.336-.75-.75-.75s-.75.336-.75.75z" fill-rule="nonzero"/></svg>
+                                    </button>
+                                    <button class="align-middle hover:opacity-50">
+                                        <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm4.253 7.75h-8.5c-.414 0-.75.336-.75.75s.336.75.75.75h8.5c.414 0 .75-.336.75-.75s-.336-.75-.75-.75z" fill-rule="nonzero"/></svg>
+                                    </button>
+                                </td>
+                                <td class="text-sm font-light px-6 py-4 text-right">
+                                    $<%= item.productsData.price %>
+                                </td>
+                                <td class="text-sm font-bold px-6 py-4 text-right">
+                                    $<%= item.productsData.price * item.productQty %>
+                                </td>
+                                <td class="text-sm font-bold px-6 py-4 text-right w-0.5">
+                                    <form action="/shop/delete-item-from-cart" method="POST">
+                                        <input type="hidden" name="productId" value="<%= item.productsData.id %>" />
+                                        <button class="align-middle hover:opacity-50" type="submit">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M9 19c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5-17v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712zm-3 4v16h-14v-16h-2v18h18v-18h-2z"/></svg>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                    <p class="text-right font-bold mb-4">Total price: $<%= cart.totalPrice %></p>
+                    <hr class="mb-4" />
+                    <p class="text-right">
+                        <a href="/shop/checkout">
+                            <button class="px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">
+                                Proceed to checkout
+                            </button>
+                        </a>
+                    </p>
                 <% } else { %>
                     <p>no</p>
                 <% } %>
