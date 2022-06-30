@@ -50,6 +50,11 @@
   text-align: right;
 }
 
-.t-products__actions {
+/* Card */
+.t-products__content {
+  flex-direction: column;
+}
 
+.t-products__actions {
+  margin-top: auto;
 }

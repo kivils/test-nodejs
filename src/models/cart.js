@@ -55,7 +55,7 @@ module.exports = class Cart {
 
       updatedCart.products = updatedCart.products.filter(product => product.id !== id);
 
-      updatedCart.totalPrice = Number(updatedCart.totalPrice) - Number(productPrice * deletedProduct.qty);
+      updatedCart.totalPrice = (Number(updatedCart.totalPrice) - Number(productPrice * deletedProduct.qty)).toFixed(2);
 
       fs.writeFile(cartData, JSON.stringify(updatedCart), err => {
         console.log('Remove from cart error: ', err);

@@ -81,14 +81,7 @@ exports.addPostCart = (req, res) => {
   Product.findById(productId, product => {
     Cart.addProduct(productId, product.price);
 
-    // TODO: Fix: Add callback
-    Cart.fetchCartItems(cart => {
-      res.render('shop/cart', {
-        pageTitle: 'Your shopping cart',
-        cart: cart,
-        path: '/shop/cart'
-      });
-    });
+    res.redirect('/shop/cart');
   });
 }
 
@@ -102,6 +95,7 @@ exports.postCartDeleteProduct = (req, res) => {
 
   Product.findById(productId, product => {
     Cart.deleteProduct(product.id, product.price);
+
     res.redirect('/shop/cart');
   })
 }

@@ -1,10 +1,17 @@
-<form class="block p-6 rounded-lg shadow-lg bg-white mb-8" action="<% if(editing) { %>/admin/edit-product<% } else { %>/admin/add-product<% } %>" method="POST">
+<form class="block p-6 rounded-lg shadow-lg bg-white mb-8" action="/admin/post-product" method="POST">
 
     <input type="hidden" name="product_id" id="product_id"
         <% if(product) { %>
             value="<%= product.id %>"
         <% } else { %>
             value="<%- Math.random().toString().substring(0, 8) %>"
+        <% } %>
+    />
+    <input type="hidden" name="editing" id="editing"
+        <% if(product) { %>
+            value="1"
+        <% } else { %>
+            value=""
         <% } %>
     />
     <div class="form-group mb-4">
@@ -17,13 +24,13 @@
     </div>
     <div class="form-group mb-4">
         <label class="block mb-1" for="product_imgUrl">Product image url</label>
-        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="product_imgUrl" id="product_imgUrl" required value="<%= product && product.imgUrl %>"/>
+        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="product_imgUrl" id="product_imgUrl" value="<%= product && product.imgUrl %>"/>
     </div>
     <div class="form-group mb-4">
         <label class="block mb-1" for="product_price">Product price</label>
         <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="number" step="0.01" name="product_price" id="product_price" required value="<%= product && product.price %>"/>
     </div>
     <button class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">
-        <% if(editing) { %>Update product<% } else { %>Add a new product<% } %>
+        <% if(product) { %>Update product<% } else { %>Add a new product<% } %>
     </button>
 </form>

@@ -31,16 +31,17 @@ module.exports = class Product {
    */
   save() {
     readProductsFromFile(products => {
-      const existingProductIndex = products.find(product => product.id === this.id);
+      const existingProductIndex = products.findIndex(product => product.id === this.id);
+      const existingProduct = products.find(product => product.id === this.id);
 
       // if product exists - edit product
-      if(existingProductIndex) {
+      if(existingProduct) {
         const updatedProducts = [ ...products ];
 
         updatedProducts[existingProductIndex] = this;
 
         fs.writeFile(productsData, JSON.stringify(updatedProducts), err => {
-          console.log('Error saving product: ', err);
+          console.log('Error editing product: ', err);
         });
       }
       // Add a new product
@@ -48,7 +49,7 @@ module.exports = class Product {
         products.push(this);
 
         fs.writeFile(productsData, JSON.stringify(products), err => {
-          console.log('Error saving product: ', err);
+          console.log('Error adding product: ', err);
         });
       }
     });
@@ -62,12 +63,17 @@ module.exports = class Product {
       const deletedProduct = products.find(product => product.id === id);
       const updatedProducts = products.filter(product => product.id !== id);
 
-      fs.writeFile(productsData, JSON.stringify(updatedProducts), err => {
-        Cart.deleteProduct(id, deletedProduct.price);
-        console.log('Error deleting product: ', err);
-      });
+      if(deletedProduct) {
+        fs.writeFile(productsData, JSON.stringify(updatedProducts), err => {
+          Cart.deleteProduct(id, deletedProduct.price);
+          console.log('Error deleting product: ', err);
+        });
 
-      cb(deletedProduct.title);
+        cb(deletedProduct.title);
+      }
+      else {
+        cb('');
+      }
     });
   };
 
