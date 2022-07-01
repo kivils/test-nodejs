@@ -69,7 +69,7 @@ exports.postPostProduct = (req, res) => {
 
   // Adding a product
   if(!product_id) {
-    Product.create({
+    req.user.createProduct({ // createProduct - is a method automatically created by sequelize from User.hasMany(Product)
       title: product_title,
       description: product_description,
       imgUrl: product_imgUrl,
@@ -146,7 +146,7 @@ exports.getAdminProducts = (req, res) => {
     );
   };
 
-  Product.findAll()
+  req.user.getProducts()
     .then( products => {
       renderPage(products);
     })

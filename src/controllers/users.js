@@ -6,19 +6,30 @@ const User = require('../models/user');
  * @param res
  */
 exports.postCreateUsers = (req, res) => {
-  const username = req.body.username;
-  const user = new User(username);
+  const {
+    name,
+    username,
+    email
+  } = req.body;
 
-  res.render(
-      'users/create-user',
-      {
-        pageTitle: 'Create user',
-        path: '/users/create-user',
-        username: username
-      }
-  );
-
-  user.save();
+  User.create({
+    name: name,
+    username: username,
+    email: email
+  })
+    .then( user => {
+      res.render(
+        'users/create-user',
+        {
+          pageTitle: 'Create user',
+          path: '/users/create-user',
+          user: user
+        }
+      );
+    })
+    .catch(err => {
+      console.log(err);
+    })
 }
 
 /**
@@ -27,13 +38,17 @@ exports.postCreateUsers = (req, res) => {
  * @param res
  */
 exports.getUsers = (req, res) => {
-  User.fetchAll(users => {
-    res.render('users/users', {
-      pageTitle: 'Our people',
-      users: users,
-      path: '/users'
+  User.findAll()
+    .then(users => {
+      res.render('users/users', {
+        pageTitle: 'Our people',
+        users: users,
+        path: '/users'
+      });
+    })
+    .catch(err => {
+      console.log(err);
     });
-  });
 }
 
 /**

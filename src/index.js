@@ -7,6 +7,9 @@ const mainController = require('./controllers/main');
 
 const publicDirectory = path.join(__dirname, '..', 'public');
 
+const Product = require('./models/product');
+const User = require('./models/user');
+
 /**
  * !!! FOR FRONTEND LIVE RELOAD
  * @see https://bytearcher.com/articles/refresh-changes-browser-express-livereload-nodemon/
@@ -55,6 +58,18 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(publicDirectory));
 
 /**
+ * Middleware to retrieve admin user; then it can be used throughout an app
+ */
+app.use((req, res, next) => {
+  User.findByPk(1)
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => console.log(err));
+});
+
+/**
  * Routes started with /users
  */
 app.use('/users', usersRouter);
@@ -66,11 +81,28 @@ app.use(defaultRouter);
 app.use(mainController.getPageNotFound);
 
 /**
+ * Creating relations between tables in db
+ */
+Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE'});
+User.hasMany(Product);
+
+/**
  * Syncing with mysql database using sequelize library
  */
 sequelize
   .sync()
-  .then( results => {
+  .then( result => {
+    return User.findByPk(1); // Dummy user
+  })
+  .then(user => {
+    if(!user) {
+      return User.create({ name: 'Admin user', username: 'username', email: 'test@test.email' });
+    }
+    else {
+      return Promise.resolve(user);
+    }
+  })
+  .then(user => {
     // start to listen to a server only if db connection is successful
     app.listen(3000);
   })
