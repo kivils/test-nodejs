@@ -10,6 +10,7 @@
 <main>
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
+            <% if (product) { %>
             <div class="flex">
                 <div class="flex-1 max-w-sm bg-white shadow-xl rounded p-4">
                     <div class="t-products__img-wrapper mb-4">
@@ -30,6 +31,9 @@
                     </div>
                 </div>
             </div>
+            <% } else { %>
+                <p>Product doesn't exist</p>
+            <% } %>
         </div>
     </div>
 </main>

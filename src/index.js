@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const sequelize = require('./helpers/database');
 
 const mainController = require('./controllers/main');
 
@@ -64,4 +65,16 @@ app.use(defaultRouter);
 
 app.use(mainController.getPageNotFound);
 
-app.listen(3000);
+/**
+ * Syncing with mysql database using sequelize library
+ */
+sequelize
+  .sync()
+  .then( results => {
+    // start to listen to a server only if db connection is successful
+    app.listen(3000);
+  })
+  .catch(err => {
+    console.log(err);
+  })
+;

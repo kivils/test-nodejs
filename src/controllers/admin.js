@@ -8,36 +8,36 @@ const Product = require('../models/product');
 exports.getPostProduct = (req, res) => {
   const productId = req.params.productId;
 
+  const renderPage = content => {
+    res.render(
+      'admin/post-product',
+      {
+        pageTitle: productId ? 'Edit product' : 'Add a new product',
+        path: '/admin',
+        product: content,
+        submitted: false
+      }
+    );
+  };
+
   // Editing an existing product
   if(productId) {
-    Product.findById(productId, product => {
-      if(!product) {
-        return res.redirect('/admin');
-      }
-
-      res.render(
-        'admin/post-product',
-        {
-          pageTitle: 'Edit product: ',
-          path: '/admin',
-          product: product,
-          submitted: false
+    Product.findByPk(productId)
+      .then(product => {
+        if(!product) {
+          return res.redirect('/admin');
         }
-      )
-    });
+
+        renderPage(product);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   // Adding a new product
   else {
-    res.render(
-      'admin/post-product',
-      {
-        pageTitle: 'Add a new product',
-        path: '/admin',
-        product: null,
-        submitted: false
-      }
-    )
+    renderPage(null);
   }
 };
 
@@ -52,33 +52,54 @@ exports.postPostProduct = (req, res) => {
     product_title,
     product_description,
     product_imgUrl,
-    product_price,
-    editing
+    product_price
   } = req.body;
 
-  const product = new Product(
-      product_id,
-      product_title,
-      product_description,
-      product_imgUrl,
-      product_price
-  );
+  const renderPage = (content,) => {
+    res.render(
+      'admin/post-product',
+      {
+        pageTitle: (product_id ? 'Product updated: ': 'New product added: '),
+        product: content,
+        path: '/admin',
+        submitted: true
+      }
+    );
+  }
 
-  product.save()
-    .then(() => {
-      res.render(
-          'admin/post-product',
-          {
-            pageTitle: (editing ? 'Product updated: ': 'New product added: '),
-            product: product,
-            path: '/admin',
-            submitted: true
-          }
-      );
+  // Adding a product
+  if(!product_id) {
+    Product.create({
+      title: product_title,
+      description: product_description,
+      imgUrl: product_imgUrl,
+      price: product_price
     })
-    .catch(err => {
-      console.log(err);
-    });
+      .then(product => {
+        renderPage(product);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+  // Editing a product
+  else {
+    Product.findByPk(product_id)
+      .then(product => {
+        product.title = product_title;
+        product.description = product_description;
+        product.imgUrl = product_imgUrl;
+        product.price = product_price;
+
+        return product.save();
+      })
+      .then(result => {
+        renderPage(result);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
 }
 
 /**
@@ -89,21 +110,23 @@ exports.postPostProduct = (req, res) => {
 exports.getDeleteProduct = (req, res) => {
   const productId = req.params.productId;
 
-  Product.deleteById(productId, title => {
-    if(title) {
+  Product.findByPk(productId)
+    .then(product => {
+      return product.destroy();
+    })
+    .then(result => {
       res.render(
         'admin/delete-product',
         {
           pageTitle: 'Product deleted: ',
           path: '/admin/delete-product',
-          title: title
+          title: result.title
         }
       );
-    }
-    else {
-      res.redirect('/admin')
-    }
-  });
+    })
+    .catch(err => {
+      res.redirect('/admin');
+    })
 };
 
 /**
@@ -112,20 +135,25 @@ exports.getDeleteProduct = (req, res) => {
  * @param res
  */
 exports.getAdminProducts = (req, res) => {
-  Product.fetchProducts()
-    .then(([ rows ]) => {
-      res.render(
-        'admin/products-list',
-        {
-          pageTitle: 'Your admin area for our amazing shop',
-          path: '/admin',
-          products: rows
-        }
-      );
+  const renderPage = content => {
+    res.render(
+      'admin/products-list',
+      {
+        pageTitle: 'Your admin area for our amazing shop',
+        path: '/admin',
+        products: content
+      }
+    );
+  };
+
+  Product.findAll()
+    .then( products => {
+      renderPage(products);
     })
     .catch(err => {
-      console.log(err)
-    })
+      console.log(err);
+      renderPage({});
+    });
 };
 
 /**
