@@ -64,17 +64,21 @@ exports.postPostProduct = (req, res) => {
       product_price
   );
 
-  product.save();
-
-  res.render(
-      'admin/post-product',
-      {
-        pageTitle: (editing ? 'Product updated: ': 'New product added: '),
-        product: product,
-        path: '/admin',
-        submitted: true
-      }
-  );
+  product.save()
+    .then(() => {
+      res.render(
+          'admin/post-product',
+          {
+            pageTitle: (editing ? 'Product updated: ': 'New product added: '),
+            product: product,
+            path: '/admin',
+            submitted: true
+          }
+      );
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 
 /**
@@ -108,16 +112,20 @@ exports.getDeleteProduct = (req, res) => {
  * @param res
  */
 exports.getAdminProducts = (req, res) => {
-  Product.fetchProducts(products => {
-    res.render(
-      'admin/products-list',
-      {
-        pageTitle: 'Your admin area for our amazing shop',
-        path: '/admin',
-        products: products
-      }
-    );
-  });
+  Product.fetchProducts()
+    .then(([ rows ]) => {
+      res.render(
+        'admin/products-list',
+        {
+          pageTitle: 'Your admin area for our amazing shop',
+          path: '/admin',
+          products: rows
+        }
+      );
+    })
+    .catch(err => {
+      console.log(err)
+    })
 };
 
 /**

@@ -10,5 +10,6 @@ We are building an internet-shop
 - express.js server
 - Create/Reade/Update/Delete functionality for products in the internet-shop
 - Saving data in the file
+- Storing data in databases
+  - MySQL
 - ...
-- 

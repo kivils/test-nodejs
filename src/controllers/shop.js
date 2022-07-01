@@ -7,16 +7,20 @@ const Cart = require('../models/cart');
  * @param res
  */
 exports.getProducts = (req, res) => {
-  Product.fetchProducts(products => {
-    res.render(
-      'shop/products',
-      {
-        pageTitle: 'Our amazing shop',
-        path: '/shop',
-        products: products
-      }
-    );
-  });
+  Product.fetchProducts()
+    .then(([ rows ]) => {
+      res.render(
+        'shop/products',
+        {
+          pageTitle: 'Our amazing shop',
+          path: '/shop',
+          products: rows
+        }
+      );
+    })
+    .catch(err => {
+      console.log(err);
+    })
 };
 
 /**
@@ -27,16 +31,20 @@ exports.getProducts = (req, res) => {
 exports.getProduct = (req, res) => {
   const productId = req.params.productId;
   if(productId) {
-    Product.findById(productId, product => {
-      res.render(
+    Product.findById(productId)
+      .then(([ product ]) => {
+        res.render(
           'shop/product-card',
           {
-            pageTitle: product.title,
+            pageTitle: product[0].title,
             path: '/shop',
-            product: product
+            product: product[0]
           }
-      );
-    });
+        );
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
   else {
     res.redirect('/shop');
