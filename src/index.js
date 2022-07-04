@@ -9,6 +9,8 @@ const publicDirectory = path.join(__dirname, '..', 'public');
 
 const Product = require('./models/product');
 const User = require('./models/user');
+const Cart = require('./models/cart');
+const CartItem = require('./models/cart-item');
 
 /**
  * !!! FOR FRONTEND LIVE RELOAD
@@ -83,15 +85,20 @@ app.use(mainController.getPageNotFound);
 /**
  * Creating relations between tables in db
  */
-Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE'});
+Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
+Cart.hasMany(CartItem);
 
 /**
  * Syncing with mysql database using sequelize library
  */
 sequelize
   .sync()
-  .then( result => {
+  .then(() => {
     return User.findByPk(1); // Dummy user
   })
   .then(user => {
@@ -103,10 +110,14 @@ sequelize
     }
   })
   .then(user => {
-    // start to listen to a server only if db connection is successful
+    return user.createCart();
+  })
+  .then(() => {
+    // start to listen to a server only if:
+    // - db connection is successful
+    // - default cart for default user is created
     app.listen(3000);
   })
   .catch(err => {
     console.log(err);
-  })
-;
+  });
