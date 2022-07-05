@@ -116,7 +116,7 @@ sequelize
     }
   })
   .then(user => {
-    return user.createCart();
+    return user.createCart({ totalPrice: 0 });
   })
   .then(() => {
     // start to listen to a server only if:

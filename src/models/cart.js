@@ -10,6 +10,10 @@ const Cart = sequelize.define(
       allowNull: false,
       autoIncrement: true,
       primaryKey: true
+    },
+    totalPrice: {
+      type: Sequelize.DOUBLE,
+      allowNull: true
     }
   }
 )

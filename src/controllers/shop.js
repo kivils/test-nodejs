@@ -129,6 +129,8 @@ exports.addPostCart = (req, res) => {
       return Product.findByPk(productId);
     })
     .then(product => {
+      fetchedCart.update({ totalPrice: fetchedCart.totalPrice + product.price });
+
       return fetchedCart.addProduct(
         product,
         {
@@ -152,14 +154,19 @@ exports.addPostCart = (req, res) => {
  */
 exports.postCartDeleteProduct = (req, res) => {
   const productId = req.body.productId;
+  let fetchedCart;
 
   req.user
     .getCart()
     .then(cart=> {
+      fetchedCart = cart;
+
       return cart.getProducts({ where: { id: productId } });
     })
     .then(products => {
       const product = products[0];
+
+      fetchedCart.update({ totalPrice: fetchedCart.totalPrice - (product.price * product.cartItem.quantity) });
 
       return product.cartItem.destroy();
     })
@@ -198,8 +205,9 @@ exports.postOrder = (req, res) => {
     })
     .then(products => {
       return req.user
-        .createOrder()
+        .createOrder({ totalPrice: fetchedCart.totalPrice })
         .then(order => {
+
           return order.addProducts(
             products.map(product => {
               product.orderItem = { quantity: product.cartItem.quantity };
@@ -212,6 +220,8 @@ exports.postOrder = (req, res) => {
         });
     })
     .then(() => {
+      fetchedCart.update({ totalPrice: 0 });
+
       return fetchedCart.setProducts(null);
     })
     .then(() => {
@@ -229,8 +239,16 @@ exports.postOrder = (req, res) => {
  */
 exports.getOrders = (req, res) => {
   req.user
-    .getOrders()
+    .getOrders({ include: ['products'] })
     .then(orders => {
+      let itemTotalPrice = 0;
+
+      orders.map(order => {
+        order.products.map(product => {
+          itemTotalPrice = itemTotalPrice + (product.price * product.orderItem.quantity);
+        })
+      });
+
       res.render('shop/orders', {
         pageTitle: 'Your orders',
         path: '/shop/orders',
