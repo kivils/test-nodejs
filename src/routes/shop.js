@@ -8,7 +8,9 @@ router.post('/shop/cart', shopController.addPostCart);
 router.get('/shop/cart', shopController.getCart);
 router.post('/shop/delete-item-from-cart', shopController.postCartDeleteProduct);
 
-router.use('/shop/orders', shopController.getOrders);
+router.post('/shop/orders', shopController.postOrder);
+router.get('/shop/orders', shopController.getOrders);
+router.use('/shop/orders/:orderId', shopController.getOrder);
 
 router.use('/shop/checkout', shopController.getCheckout);
 
