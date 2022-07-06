@@ -1,0 +1,35 @@
+<%- include('../_includes/head') %>
+
+<%- include('../_includes/main-nav') %>
+
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-900">
+            <%= pageTitle %><% if(product) { %> <span style="color: green;"> <%= product.title %></span> <% } %>
+        </h1>
+    </div>
+</header>
+<main>
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <% if(submitted) { %>
+                <p class="text-right mb-4">
+                    <a href="/admin/post-product">
+                        <button class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">
+                            Add a new product
+                        </button>
+                    </a>
+                </p>
+                <ul class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                    <li class="group relative">
+                        <%- include('../_includes/product-item', { product: product, isAdmin: true }) %>
+                    </li>
+                </ul>
+            <% } else { %>
+                <%- include('../_includes/product-form', { product: product })%>
+            <% } %>
+        </div>
+    </div>
+</main>
+
+<%- include('../_includes/footer') %>

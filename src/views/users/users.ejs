@@ -1,6 +1,6 @@
-<%- include('../../includes/head') %>
+<%- include('../_includes/head') %>
 
-<%- include('../../includes/main-nav') %>
+<%- include('../_includes/main-nav') %>
 
 <header class="bg-white shadow">
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -13,7 +13,7 @@
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
             <h2 class="font-sans text-xl text-gray-900 mb-4">Please join us :-)</h2>
-            <%- include('../../includes/user-form.ejs') %>
+            <%- include('../_includes/user-form.ejs') %>
 
             <% if (users.length > 0) { %>
                 <h2 class="font-sans text-xl text-gray-900 mb-4">Our people</h2>
@@ -30,4 +30,4 @@
     </div>
 </main>
 
-<%- include('../../includes/footer') %>
+<%- include('../_includes/footer') %>

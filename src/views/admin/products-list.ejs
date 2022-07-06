@@ -1,12 +1,10 @@
-<%- include('../../includes/head') %>
+<%- include('../_includes/head') %>
 
-<%- include('../../includes/main-nav') %>
+<%- include('../_includes/main-nav') %>
 
 <header class="bg-white shadow">
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold text-gray-900">
-            <%= pageTitle %><% if(product) { %> <span style="color: green;"> <%= product.title %></span> <% } %>
-        </h1>
+        <h1 class="text-3xl font-bold text-gray-900"><%= pageTitle %></h1>
     </div>
 </header>
 <main>
@@ -19,17 +17,21 @@
                     </button>
                 </a>
             </p>
-            <% if(submitted) { %>
+            <% if(products.length) {%>
+                <h2 class="font-sans text-xl text-gray-900 mb-4">Products already added:</h2>
                 <ul class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                    <% products.map(product => { %>
                     <li class="group relative">
-                        <%- include('../../includes/product-item', { product: product, isAdmin: true }) %>
+                        <%- include('../_includes/product-item', { product: product, isAdmin: true }) %>
                     </li>
+                    <% }) %>
                 </ul>
             <% } else { %>
-                <%- include('../../includes/product-form', { product: product })%>
+                <p class="mb-4">No products so far</p>
             <% } %>
         </div>
     </div>
+
 </main>
 
-<%- include('../../includes/footer') %>
+<%- include('../_includes/footer') %>

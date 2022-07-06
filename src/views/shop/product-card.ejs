@@ -1,6 +1,6 @@
-<%- include('../../includes/head') %>
+<%- include('../_includes/head') %>
 
-<%- include('../../includes/main-nav') %>
+<%- include('../_includes/main-nav') %>
 
 <header class="bg-white shadow">
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -26,7 +26,7 @@
                             $<%= product.price %>
                         </p>
                         <div class="ml-4">
-                            <%- include('../../includes/add-to-cart-btn', {id: product.id} ) %>
+                            <%- include('../_includes/add-to-cart-btn', {id: product.id} ) %>
                         </div>
                     </div>
                 </div>
@@ -38,4 +38,4 @@
     </div>
 </main>
 
-<%- include('../../includes/footer') %>
+<%- include('../_includes/footer') %>

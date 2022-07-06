@@ -44,7 +44,7 @@ const app = express();
  * TEMPLATING ENGINE SETUP:
  */
 app.set('view engine', 'ejs');
-app.set('views', 'src/views/ejs/views');
+app.set('views', 'src/views');
 
 /**
  * !!! FOR FRONTEND LIVE RELOAD
