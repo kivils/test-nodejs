@@ -1,5 +1,5 @@
 <div class="t-products__itemInner bg-white shadow-xl rounded p-4">
-    <a class="t-products__link" href="/shop/<%= product.id %>">
+    <a class="t-products__link" href="/shop/<%= product._id %>">
         <h2 class="text-gray-900 text-lg mb-4"><%=product.title%></h2>
         <div class="t-products__img-wrapper mb-4">
             <img class="t-products__img" src="<%= product.imgUrl || 'https://cdn.pixabay.com/photo/2013/07/12/18/22/t-shirt-153370_960_720.png' %>" alt="<%= product.title %>"/>
@@ -13,15 +13,15 @@
     </a>
     <div class="t-products__actions flex mt-4">
         <% if(isAdmin) { %>
-            <a class="flex-1" href="/admin/post-product/<%= product.id %>">
+            <a class="flex-1" href="/admin/post-product/<%= product._id %>">
                 <button class="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Edit</button>
             </a>
-            <a class="flex-1 ml-1" href="/admin/delete-product/<%= product.id %>">
+            <a class="flex-1 ml-1" href="/admin/delete-product/<%= product._id %>">
                 <button class="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Delete</button>
             </a>
         <% } else { %>
             <div class="flex-1 ml-4">
-                <%- include('./add-to-cart-btn', {id: product.id} ) %>
+                <%- include('./add-to-cart-btn', {id: product._id} ) %>
             </div>
         <% } %>
     </div>

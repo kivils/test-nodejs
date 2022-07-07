@@ -1,18 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const sequelize = require('./helpers/database');
 
 const mainController = require('./controllers/main');
+const mongoConnect = require('./helpers/database').mongoConnect;
 
 const publicDirectory = path.join(__dirname, '..', 'public');
-
-const Product = require('./models/product');
-const User = require('./models/user');
-const Cart = require('./models/cart');
-const CartItem = require('./models/cart-item');
-const Order = require('./models/order');
-const OrderItem = require('./models/order-item');
 
 /**
  * !!! FOR FRONTEND LIVE RELOAD
@@ -65,65 +58,26 @@ app.use(express.static(publicDirectory));
  * Middleware to retrieve admin user; then it can be used throughout an app
  */
 app.use((req, res, next) => {
-  User.findByPk(1)
-    .then(user => {
-      req.user = user;
-      next();
-    })
-    .catch(err => console.log(err));
+  // User.findByPk(1)
+  //   .then(user => {
+  //     req.user = user;
+  //     next();
+  //   })
+  //   .catch(err => console.log(err));
+  next();
 });
 
 /**
  * Routes started with /users
  */
-app.use('/users', usersRouter);
+// app.use('/users', usersRouter);
 app.use(shopRouter);
 app.use(adminRouter);
-
+//
 app.use(defaultRouter);
 
-app.use(mainController.getPageNotFound);
+// app.use(mainController.getPageNotFound);
 
-/**
- * Creating relations between tables in db
- */
-Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
-User.hasMany(Product);
-User.hasOne(Cart);
-Cart.belongsTo(User);
-Cart.belongsToMany(Product, { through: CartItem });
-Product.belongsToMany(Cart, { through: CartItem });
-Cart.hasMany(CartItem);
-Order.belongsTo(User);
-User.hasMany(Order);
-Order.belongsToMany(Product, { through: OrderItem });
-
-/**
- * Syncing with mysql database using sequelize library
- */
-sequelize
-  // .sync({ force: true })
-  .sync()
-  .then(() => {
-    return User.findByPk(1); // Dummy user
-  })
-  .then(user => {
-    if(!user) {
-      return User.create({ name: 'Admin user', username: 'username', email: 'test@test.email' });
-    }
-    else {
-      return Promise.resolve(user);
-    }
-  })
-  .then(user => {
-    return user.createCart({ totalPrice: 0 });
-  })
-  .then(() => {
-    // start to listen to a server only if:
-    // - db connection is successful
-    // - default cart for default user is created
-    app.listen(3000);
-  })
-  .catch(err => {
-    console.log(err);
-  });
+mongoConnect(() => {
+  app.listen(3000);
+});

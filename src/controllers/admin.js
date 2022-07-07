@@ -1,4 +1,7 @@
+const getDb = require('../helpers/database').getDb;
 const Product = require('../models/product');
+const mongodb = require("mongodb");
+
 
 /**
  * Product form: add and edit a product
@@ -22,7 +25,7 @@ exports.getPostProduct = (req, res) => {
 
   // Editing an existing product
   if(productId) {
-    Product.findByPk(productId)
+    Product.fetchById(productId)
       .then(product => {
         if(!product) {
           return res.redirect('/admin');
@@ -48,14 +51,15 @@ exports.getPostProduct = (req, res) => {
  */
 exports.postPostProduct = (req, res) => {
   const {
-    product_id,
     product_title,
     product_description,
     product_imgUrl,
-    product_price
+    product_price,
+    product_id
   } = req.body;
+  const db = getDb();
 
-  const renderPage = (content,) => {
+  const renderPage = (content) => {
     res.render(
       'admin/post-product',
       {
@@ -69,14 +73,23 @@ exports.postPostProduct = (req, res) => {
 
   // Adding a product
   if(!product_id) {
-    req.user.createProduct({ // createProduct - is a method automatically created by sequelize from User.hasMany(Product)
-      title: product_title,
-      description: product_description,
-      imgUrl: product_imgUrl,
-      price: product_price
-    })
-      .then(product => {
-        renderPage(product);
+    const product = new Product(
+      product_title,
+      product_description,
+      product_imgUrl,
+      product_price
+    );
+
+    product.save()
+      .then(result => {
+        const id = result.insertedId
+
+        return db.collection('products')
+          .find({ _id: id })
+          .next()
+      })
+      .then(prod => {
+        renderPage(prod);
       })
       .catch(err => {
         console.log(err);
@@ -84,14 +97,19 @@ exports.postPostProduct = (req, res) => {
   }
   // Editing a product
   else {
-    Product.findByPk(product_id)
-      .then(product => {
-        product.title = product_title;
-        product.description = product_description;
-        product.imgUrl = product_imgUrl;
-        product.price = product_price;
+    const product = new Product(
+      product_title,
+      product_description,
+      product_imgUrl,
+      product_price,
+      product_id
+    );
 
-        return product.save();
+    product.save()
+      .then(() => {
+        return db.collection('products')
+          .find({ _id: new mongodb.ObjectId(product_id) })
+          .next()
       })
       .then(result => {
         renderPage(result);
@@ -146,7 +164,7 @@ exports.getAdminProducts = (req, res) => {
     );
   };
 
-  req.user.getProducts()
+  Product.fetchAll()
     .then( products => {
       renderPage(products);
     })

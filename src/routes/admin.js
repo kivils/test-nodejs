@@ -9,7 +9,7 @@ router.get('/admin/post-product/', productController.getPostProduct);
 
 router.post('/admin/post-product', productController.postPostProduct);
 
-router.get('/admin/delete-product/:productId', productController.getDeleteProduct);
+// router.get('/admin/delete-product/:productId', productController.getDeleteProduct);
 
 router.use('/admin', productController.getAdminProducts);
 

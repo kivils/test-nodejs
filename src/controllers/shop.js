@@ -17,7 +17,7 @@ exports.getProducts = (req, res) => {
     );
   };
 
-  Product.findAll()
+  Product.fetchAll()
     .then( products => {
       renderPage(products);
     })
@@ -45,7 +45,7 @@ exports.getProduct = (req, res) => {
     );
   };
 
-  Product.findByPk(productId)
+  Product.fetchById(productId)
     .then(product => {
       renderPage(product);
     })

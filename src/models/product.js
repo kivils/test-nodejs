@@ -1,33 +1,71 @@
-const Sequelize = require('sequelize');
+const mongodb = require('mongodb');
+const getDb = require('../helpers/database').getDb;
 
-const sequelize = require('../helpers/database');
+class Product {
+  constructor(title, description, imgUrl, price, id) {
+    this.title = title;
+    this.description = description;
+    this.imgUrl = imgUrl;
+    this.price = price;
+    this._id = id;
+  };
 
-const Product = sequelize.define(
-  'product', {
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true
-    },
-    title: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    description: {
-      type: Sequelize.TEXT,
-      allowNull: false
-    },
-    imgUrl: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      defaultValue: 'https://cdn.pixabay.com/photo/2013/07/12/18/22/t-shirt-153370_960_720.png'
-    },
-    price: {
-      type: Sequelize.DOUBLE,
-      allowNull: false
+  save() {
+    const db = getDb();
+    let dbQueries;
+
+    // Edit existing product
+    if(this._id) {
+      dbQueries = db
+        .collection('products')
+        .updateOne(
+          { _id: new mongodb.ObjectId(this._id) }, // FIX
+          { $set: this }
+        );
     }
-  }
-);
+    // Add new product
+    else {
+      dbQueries = db
+        .collection('products')
+        .insertOne(this)
+    }
+
+    return dbQueries
+      .then(result => {
+        return result;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  static fetchAll() {
+    const db = getDb();
+
+    return db.collection('products')
+      .find()
+      .toArray()
+      .then(products => {
+        return products;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  static fetchById(prodId) {
+    const db = getDb();
+
+    return db.collection('products')
+      .find({ _id: new mongodb.ObjectId(prodId) })
+      .next()
+      .then(product => {
+        return product;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+}
 
 module.exports = Product;
