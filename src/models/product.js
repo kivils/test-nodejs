@@ -20,6 +20,9 @@ class Product {
         .collection('products')
         .updateOne(
           { _id: this._id },
+          // _id should not be passed to $set, as in this case mongodb also will try to update it
+          // but _id is immutable
+          // so in this case of editing product we can't use { $set: { this }}
           { $set: {
               title: this.title,
               description: this.description,
@@ -83,6 +86,28 @@ class Product {
         console.log(err);
       });
   };
+
+  static deleteById(prodId) {
+    const db = getDb();
+
+    return this.fetchById(prodId)
+      .then(product => {
+        return product.title;
+      })
+      .then(title => {
+        return db.collection('products')
+          .deleteOne({ _id: new mongodb.ObjectId(prodId) })
+          .then(() => {
+            return title;
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 }
 
 module.exports = Product;

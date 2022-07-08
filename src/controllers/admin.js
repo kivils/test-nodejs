@@ -92,17 +92,14 @@ exports.postPostProduct = (req, res) => {
 exports.getDeleteProduct = (req, res) => {
   const productId = req.params.productId;
 
-  Product.findByPk(productId)
-    .then(product => {
-      return product.destroy();
-    })
-    .then(result => {
+  Product.deleteById(productId)
+    .then(title => {
       res.render(
         'admin/delete-product',
         {
           pageTitle: 'Product deleted: ',
           path: '/admin/delete-product',
-          title: result.title
+          title: title
         }
       );
     })
