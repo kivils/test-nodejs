@@ -1,7 +1,4 @@
-const getDb = require('../helpers/database').getDb;
 const Product = require('../models/product');
-const mongodb = require("mongodb");
-
 
 /**
  * Product form: add and edit a product
@@ -57,7 +54,6 @@ exports.postPostProduct = (req, res) => {
     product_price,
     product_id
   } = req.body;
-  const db = getDb();
 
   const renderPage = (content) => {
     res.render(
@@ -71,53 +67,21 @@ exports.postPostProduct = (req, res) => {
     );
   }
 
-  // Adding a product
-  if(!product_id) {
-    const product = new Product(
-      product_title,
-      product_description,
-      product_imgUrl,
-      product_price
-    );
+  const product = new Product(
+    product_title,
+    product_description,
+    product_imgUrl,
+    product_price,
+    product_id
+  );
 
-    product.save()
-      .then(result => {
-        const id = result.insertedId
-
-        return db.collection('products')
-          .find({ _id: id })
-          .next()
-      })
-      .then(prod => {
-        renderPage(prod);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }
-  // Editing a product
-  else {
-    const product = new Product(
-      product_title,
-      product_description,
-      product_imgUrl,
-      product_price,
-      product_id
-    );
-
-    product.save()
-      .then(() => {
-        return db.collection('products')
-          .find({ _id: new mongodb.ObjectId(product_id) })
-          .next()
-      })
-      .then(result => {
-        renderPage(result);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }
+  product.save()
+    .then(result => {
+      renderPage(result);
+    })
+    .catch(err => {
+      console.log(err);
+    })
 }
 
 /**
@@ -143,6 +107,7 @@ exports.getDeleteProduct = (req, res) => {
       );
     })
     .catch(err => {
+      console.log(err);
       res.redirect('/admin');
     })
 };
