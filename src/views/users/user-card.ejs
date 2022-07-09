@@ -1,0 +1,27 @@
+<%- include('../_includes/head') %>
+
+<%- include('../_includes/main-nav') %>
+
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-900">
+            <%= pageTitle %>
+        </h1>
+    </div>
+</header>
+<main>
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <h2 class="font-sans text-xl text-gray-900 mb-4">
+                <% if(user) { %>
+                    <h2 class="font-sans text-xl text-gray-900 mb-4">Update your data</h2>
+                    <%- include('../_includes/user-form.ejs') %>
+                <% } else { %>
+                    No user found
+                <% } %>
+            </h2>
+        </div>
+    </div>
+</main>
+
+<%- include('../_includes/footer') %>

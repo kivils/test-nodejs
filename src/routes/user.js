@@ -12,9 +12,11 @@ const usersController = require('../controllers/users');
 router.post('/create-user', usersController.postCreateUsers);
 
 // /users/create-user => GET
-router.get('/create-user', usersController.getCreateUsers)
+router.get('/create-user', usersController.getCreateUsers);
+
+router.get('/:userId', usersController.getUser);
 
 // /users route
-router.use('/', usersController.getUsers)
+router.use('/', usersController.getUsers);
 
 module.exports = router;

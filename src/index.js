@@ -1,9 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const mongodb = require('mongodb');
 
 const mainController = require('./controllers/main');
 const mongoConnect = require('./helpers/database').mongoConnect;
+
+const User = require('./models/user');
 
 const publicDirectory = path.join(__dirname, '..', 'public');
 
@@ -58,25 +61,44 @@ app.use(express.static(publicDirectory));
  * Middleware to retrieve admin user; then it can be used throughout an app
  */
 app.use((req, res, next) => {
-  // User.findByPk(1)
-  //   .then(user => {
-  //     req.user = user;
-  //     next();
-  //   })
-  //   .catch(err => console.log(err));
-  next();
+  User.fetchAll()
+    .then(users => {
+      if(users.length > 0) {
+        return users[0];
+      }
+      else {
+        const user = new User(
+          'Admin',
+          'admin-nick',
+          'admin@admin.admin'
+        );
+
+        user.save(this)
+          .then(user => {
+            const currentUserId = new mongodb.ObjectId(user._id);
+
+            User.fetchById(currentUserId)
+              .then(user => {
+                req.user = user;
+              })
+          })
+          .catch(err => console.log(err));
+      }
+    })
+    .catch(err => console.log(err));
+    next();
 });
 
 /**
  * Routes started with /users
  */
-// app.use('/users', usersRouter);
+app.use('/users', usersRouter);
 app.use(shopRouter);
 app.use(adminRouter);
 //
 app.use(defaultRouter);
 
-// app.use(mainController.getPageNotFound);
+app.use(mainController.getPageNotFound);
 
 mongoConnect(() => {
   app.listen(3000);

@@ -12,11 +12,9 @@ exports.postCreateUsers = (req, res) => {
     email
   } = req.body;
 
-  User.create({
-    name: name,
-    username: username,
-    email: email
-  })
+  const user = new User(name, username, email);
+
+  user.save()
     .then( user => {
       res.render(
         'users/create-user',
@@ -38,7 +36,7 @@ exports.postCreateUsers = (req, res) => {
  * @param res
  */
 exports.getUsers = (req, res) => {
-  User.findAll()
+  User.fetchAll()
     .then(users => {
       res.render('users/users', {
         pageTitle: 'Our people',
@@ -49,7 +47,28 @@ exports.getUsers = (req, res) => {
     .catch(err => {
       console.log(err);
     });
-}
+};
+
+/**
+ * Get user page
+ * @param req
+ * @param res
+ */
+exports.getUser = (req, res) => {
+  const userId = req.params.userId;
+
+  User.fetchById(userId)
+    .then(user => {
+      res.render('users/user-card', {
+        pageTitle: 'User ' + user.name,
+        path: '/users',
+        user: user
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
 
 /**
  * Redirect to the Main page when came directly without form submission
@@ -58,4 +77,4 @@ exports.getUsers = (req, res) => {
  */
 exports.getCreateUsers = (req, res) => {
   res.redirect('/');
-}
+};

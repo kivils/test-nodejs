@@ -20,7 +20,7 @@
                 <p class="mb-4">We have many great people here, just have a look!</p>
                 <ol class="list-decimal list-inside mb-4">
                     <% for (let user of users) { %>
-                        <li><%= user.name %></li>
+                        <li><a href="/users/<%= user._id %>"><%= user.name %></a></li>
                     <% } %>
                 </ol>
             <% } else { %>
