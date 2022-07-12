@@ -114,22 +114,9 @@ exports.addPostCart = (req, res) => {
  */
 exports.postCartDeleteProduct = (req, res) => {
   const productId = req.body.productId;
-  let fetchedCart;
 
   req.user
-    .getCart()
-    .then(cart=> {
-      fetchedCart = cart;
-
-      return cart.getProducts({ where: { id: productId } });
-    })
-    .then(products => {
-      const product = products[0];
-
-      fetchedCart.update({ totalPrice: fetchedCart.totalPrice - (product.price * product.cartItem.quantity) });
-
-      return product.cartItem.destroy();
-    })
+    .deleteFromCart(productId)
     .then(() => {
       res.redirect('/shop/cart');
     })

@@ -1,5 +1,6 @@
 const mongodb = require('mongodb');
 const getDb = require('../helpers/database').getDb;
+const Product = require('./product');
 
 const ObjectId = mongodb.ObjectId;
 
@@ -92,8 +93,32 @@ class User {
       });
   }
 
-  removeFromCart(product) {
+  deleteFromCart(productId) {
+    const db = getDb();
+    const updatedCartItems = [ ...this.cart.items ];
 
+    return Product.fetchById(productId)
+      .then(product => {
+        const cartProductIndex = this.cart.items.findIndex(cp => {
+          return cp.productId.toString() === product._id.toString();
+        });
+
+        updatedCartItems.splice(updatedCartItems[cartProductIndex], 1);
+
+        const updatedCart = {
+          items: updatedCartItems,
+          totalPrice: Number(this.cart.totalPrice) - (Number(product.price) * Number(this.cart.items[cartProductIndex].quantity))
+        };
+
+        return db.collection('users')
+          .updateOne(
+            { _id: new ObjectId(this._id) },
+            { $set: { cart: updatedCart } }
+          );
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   static fetchAll() {
