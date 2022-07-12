@@ -61,32 +61,48 @@ app.use(express.static(publicDirectory));
  * Middleware to retrieve admin user; then it can be used throughout an app
  */
 app.use((req, res, next) => {
-  User.fetchAll()
-    .then(users => {
-      if(users.length > 0) {
-        return users[0];
-      }
-      else {
-        const user = new User(
-          'Admin',
-          'admin-nick',
-          'admin@admin.admin'
-        );
-
-        user.save(this)
-          .then(user => {
-            const currentUserId = new mongodb.ObjectId(user._id);
-
-            User.fetchById(currentUserId)
-              .then(user => {
-                req.user = user;
-              })
-          })
-          .catch(err => console.log(err));
-      }
+  User.fetchById('62cbf0caaaa85f73485c63b4') // Manually created user in mongodb
+    .then(user => {
+      req.user = new User(
+        user.name,
+        user.username,
+        user.email,
+        user.cart, // { items: [], totalPrice: 0 }
+        user._id
+      );
+      next();
     })
-    .catch(err => console.log(err));
-    next();
+    .catch(err => {
+      console.log(err);
+    })
+
+  // TODO: Leftovers: try to reimplement this
+  // User.fetchAll()
+  //   .then(users => {
+  //     if(users.length > 0) {
+  //       return users[0];
+  //     }
+  //     else { // Create default admin user if no users in db yet
+  //       const user = new User(
+  //         'Admin',
+  //         'admin-nick',
+  //         'admin@admin.admin'
+  //       );
+  //
+  //       user.save(this)
+  //         .then(user => {
+  //           const currentUserId = new mongodb.ObjectId(user._id);
+  //
+  //           User.fetchById(currentUserId)
+  //             .then(user => {
+  //               req.user = user;
+  //             })
+  //         })
+  //         .catch(err => console.log(err));
+  //     }
+  //   })
+  //   .catch(err => console.log(err));
+  //   next();
 });
 
 /**
