@@ -125,6 +125,20 @@ exports.postCartDeleteProduct = (req, res) => {
     });
 }
 
+exports.postUpdateAmountInCart = (req, res) => {
+  const productId = req.body.productId;
+  const increase = req.body.increase;
+
+  req.user
+    .updateAmountInCart(productId, increase)
+    .then(() => {
+      res.redirect('/shop/cart');
+    })
+    .catch(err => {
+      console.log(err);
+    })
+}
+
 /**
  * Checkout page
  * @param req

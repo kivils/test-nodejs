@@ -121,6 +121,45 @@ class User {
       });
   }
 
+  updateAmountInCart(productId, increase) {
+    let newQuantity, totalPrice;
+    const db = getDb();
+
+    const updatedCartItems = [ ...this.cart.items ];
+
+    return Product.fetchById(productId)
+      .then(product => {
+        const cartProductIndex = this.cart.items.findIndex(cp => {
+          return cp.productId.toString() === product._id.toString();
+        });
+
+        const currentQuantity = this.cart.items[cartProductIndex].quantity;
+
+        newQuantity = increase ? (currentQuantity + 1) : (currentQuantity - 1);
+        totalPrice = increase ?
+          (Number(this.cart.totalPrice) + Number(product.price)) :
+          (Number(this.cart.totalPrice) - Number(product.price));
+        updatedCartItems[cartProductIndex].quantity = newQuantity;
+
+        const updatedCart = totalPrice === 0 ? {
+          items: [],
+          totalPrice: 0
+        } : {
+          items: updatedCartItems,
+          totalPrice: totalPrice
+        }
+
+        db.collection('users')
+          .updateOne(
+            { _id: new ObjectId(this._id) },
+            { $set: { cart: updatedCart } }
+          );
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
   static fetchAll() {
     return getDb().collection('users')
       .find()
@@ -142,7 +181,7 @@ class User {
       .catch(err => {
         console.log(err);
       });
-  };
+  }
 }
 
 module.exports = User;
