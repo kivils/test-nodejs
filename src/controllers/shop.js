@@ -125,6 +125,11 @@ exports.postCartDeleteProduct = (req, res) => {
     });
 }
 
+/**
+ * Update amount of products in the cart
+ * @param req
+ * @param res
+ */
 exports.postUpdateAmountInCart = (req, res) => {
   const productId = req.body.productId;
   const increase = req.body.increase;
@@ -153,40 +158,14 @@ exports.getCheckout = (req, res) => {
 
 /**
  * Add cart to Order (POST request)
+ * @param req
+ * @param res
  */
 exports.postOrder = (req, res) => {
-  let fetchedCart;
-
   req.user
-    .getCart()
-    .then(cart => {
-      fetchedCart = cart;
-
-      return cart.getProducts();
-    })
-    .then(products => {
-      return req.user
-        .createOrder({ totalPrice: fetchedCart.totalPrice })
-        .then(order => {
-
-          return order.addProducts(
-            products.map(product => {
-              product.orderItem = { quantity: product.cartItem.quantity };
-              return product;
-            })
-          );
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    })
+    .addOrder()
     .then(() => {
-      fetchedCart.update({ totalPrice: 0 });
-
-      return fetchedCart.setProducts(null);
-    })
-    .then(() => {
-      res.redirect('/shop/checkout');
+      res.redirect('/shop/orders');
     })
     .catch(err => {
       console.log(err);
@@ -200,16 +179,8 @@ exports.postOrder = (req, res) => {
  */
 exports.getOrders = (req, res) => {
   req.user
-    .getOrders({ include: ['products'] })
+    .getOrders()
     .then(orders => {
-      let itemTotalPrice = 0;
-
-      orders.map(order => {
-        order.products.map(product => {
-          itemTotalPrice = itemTotalPrice + (product.price * product.orderItem.quantity);
-        })
-      });
-
       res.render('shop/orders', {
         pageTitle: 'Your orders',
         path: '/shop/orders',
@@ -221,13 +192,17 @@ exports.getOrders = (req, res) => {
     });
 };
 
+/**
+ * Get all orders for the user
+ * @param req
+ * @param res
+ */
 exports.getOrder = (req, res) => {
   const orderId = req.params.orderId;
 
   req.user
-    .getOrders()
-    .then(orders => {
-      const order = orders[orderId]
+    .getOrder(orderId)
+    .then(order => {
       res.render('shop/order-card', {
         pageTitle: 'Order',
         path: '/shop/order',
@@ -236,5 +211,5 @@ exports.getOrder = (req, res) => {
     })
     .catch(err => {
       console.log(err);
-    })
+    });
 };

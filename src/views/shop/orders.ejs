@@ -28,15 +28,15 @@
                     <% orders.map(( order, index ) => { %>
                         <tr class="<% if(index % 2) { %>bg-white <% } else { %>bg-gray-100<% } %> border-b">
                             <td class="text-sm font-light px-6 py-4 text-left">
-                                <a href="/shop/orders/<%= order.id %>" class="text-gray-900 underline hover:text-gray-600 hover:no-underline">
-                                    <%= order.createdAt.getDate() %>/<%= order.createdAt.getMonth() %>/<%= order.createdAt.getFullYear() %> <%= order.createdAt.getHours() %>:<%= order.createdAt.getMinutes() %>:<%= order.createdAt.getSeconds() %>
+                                <a href="/shop/orders/<%= order._id %>" class="text-gray-900 underline hover:text-gray-600 hover:no-underline">
+                                    <%= order._id %>
                                 </a>
                             </td>
                             <td class="text-sm font-light px-6 py-4 text-left">
-                                <% order.products.map(product => { %>
+                                <% order.items.map(item => { %>
                                     <p>
-                                        <a href="/shop/<%= product.id %>" class="text-gray-900 underline hover:text-gray-600 hover:no-underline">
-                                            <%= product.title %> (<%= product.orderItem.quantity %>)
+                                        <a href="/shop/<%= item.id %>" class="text-gray-900 underline hover:text-gray-600 hover:no-underline">
+                                            <%= item.title %> (<%= item.quantity %>)
                                         </a>
                                     </p>
                                 <% }) %>

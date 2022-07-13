@@ -5,8 +5,8 @@
 <header class="bg-white shadow">
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold text-gray-900">
-            <%= pageTitle %>
-            <%= order.createdAt.getDate() %>/<%= order.createdAt.getMonth() %>/<%= order.createdAt.getFullYear() %> <%= order.createdAt.getHours() %>:<%= order.createdAt.getMinutes() %>:<%= order.createdAt.getSeconds() %>
+            <%= pageTitle %>:
+            <%= order._id %>
         </h1>
     </div>
 </header>
@@ -14,9 +14,12 @@
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
             <% if (order) { %>
-                <div class="flex">
-                    Content
+                <div class="">
+                    <% order.items.map((item) => { %>
+                        <p><%= item.title %> = <%= item.price %></p>
+                    <% }) %>
                 </div>
+                <p>Total price: <%= order.totalPrice %></p>
             <% } else { %>
                 <p>Order doesn't exist</p>
             <% } %>

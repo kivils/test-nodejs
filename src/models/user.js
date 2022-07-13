@@ -13,6 +13,10 @@ class User {
     this._id = id;
   }
 
+  /**
+   * save a user
+   * @returns {Promise<Result> | Promise<any>}
+   */
   save() {
     const db = getDb();
 
@@ -35,6 +39,11 @@ class User {
       });
   };
 
+  /**
+   * Add to cart
+   * @param product
+   * @returns {*}
+   */
   addToCart(product) {
     let newQuantity = 1;
     const db = getDb();
@@ -65,8 +74,12 @@ class User {
         { _id: new ObjectId(this._id) },
         { $set: { cart: updatedCart } }
       );
-  }
+  };
 
+  /**
+   * Get all cart items
+   * @returns {Promise<Result> | Promise<any>}
+   */
   getCartItems() {
     const db = getDb();
     const productIds = this.cart.items.map(item => {
@@ -91,8 +104,13 @@ class User {
       .catch(err => {
         console.log(err);
       });
-  }
+  };
 
+  /**
+   * Delete item from cart
+   * @param productId
+   * @returns {Promise<Result> | Promise<any>}
+   */
   deleteFromCart(productId) {
     const db = getDb();
     const updatedCartItems = [ ...this.cart.items ];
@@ -119,8 +137,14 @@ class User {
       .catch(err => {
         console.log(err);
       });
-  }
+  };
 
+  /**
+   * Update product amount in cart
+   * @param productId
+   * @param increase
+   * @returns {Promise<Result> | Promise<any>}
+   */
   updateAmountInCart(productId, increase) {
     let newQuantity, totalPrice;
     const db = getDb();
@@ -135,7 +159,9 @@ class User {
 
         const currentQuantity = this.cart.items[cartProductIndex].quantity;
 
-        newQuantity = increase ? (currentQuantity + 1) : (currentQuantity - 1);
+        newQuantity = increase ?
+          (currentQuantity + 1) :
+          (currentQuantity - 1); // TODO: Fix
         totalPrice = increase ?
           (Number(this.cart.totalPrice) + Number(product.price)) :
           (Number(this.cart.totalPrice) - Number(product.price));
@@ -158,8 +184,82 @@ class User {
       .catch(err => {
         console.log(err);
       })
+  };
+
+  /**
+   * Add cart to orders
+   * @returns {Promise<Result> | Promise<any>}
+   */
+  addOrder() {
+    const db = getDb();
+
+    return this.getCartItems()
+      .then(products => {
+        const order = {
+          items: products,
+          totalPrice: this.cart.totalPrice,
+          user: {
+            _id: new ObjectId(this._id),
+            name: this.name
+          }
+        }
+
+        return db.collection('orders').insertOne(order)
+      })
+      .then(() => {
+        this.cart = { items: [], totalPrice: 0 };
+        return db.collection('users')
+          .updateOne(
+            {_id: new ObjectId(this._id)},
+            { $set: {
+              cart: {
+                items: [],
+                totalPrice: 0
+              }
+            }}
+          )
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  };
+
+  /**
+   * Get orders for the user
+   * @returns {Promise<Result> | Promise<any>}
+   */
+  getOrders() {
+    return getDb().collection('orders')
+      .find({ 'user._id': new ObjectId(this._id) })
+      .toArray()
+      .then(orders => {
+        return orders;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  /**
+   * Get one order
+   * @param orderId
+   * @returns {Promise<Result> | Promise<any>}
+   */
+  getOrder(orderId) {
+    return getDb().collection('orders')
+      .findOne({ _id: new ObjectId(orderId) })
+        .then(order => {
+          return order;
+        })
+        .catch(err => {
+          console.log(err);
+        })
   }
 
+  /**
+   * Fetch all users
+   * @returns {Promise<Result> | Promise<any>}
+   */
   static fetchAll() {
     return getDb().collection('users')
       .find()
@@ -170,8 +270,13 @@ class User {
       .catch(err => {
         console.log(err);
       });
-  }
+  };
 
+  /**
+   * Fetch user by id
+   * @param userId
+   * @returns {Promise<Result> | Promise<any>}
+   */
   static fetchById(userId) {
     return getDb().collection('users')
       .findOne({ _id: new ObjectId(userId) })
@@ -181,7 +286,7 @@ class User {
       .catch(err => {
         console.log(err);
       });
-  }
+  };
 }
 
 module.exports = User;
