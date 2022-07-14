@@ -21,6 +21,7 @@
             <% } else { %>
                 <p class="text-red-700 mb-4">Product to delete is not found</p>
             <% } %>
+            <%- include('../_includes/add-new-product') %>
             <% if(products.length) {%>
                 <h2 class="font-sans text-xl text-gray-900 mb-4">Products already added:</h2>
                 <ul class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">

@@ -74,7 +74,8 @@ exports.postPostProduct = (req, res) => {
       title: product_title,
       description: product_description,
       imgUrl: product_imgUrl,
-      price: product_price
+      price: product_price,
+      userId: req.user
     });
 
     product
