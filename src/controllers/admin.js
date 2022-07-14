@@ -22,7 +22,7 @@ exports.getPostProduct = (req, res) => {
 
   // Editing an existing product
   if(productId) {
-    Product.fetchById(productId)
+    Product.findById(productId)
       .then(product => {
         if(!product) {
           return res.redirect('/admin');
@@ -67,21 +67,47 @@ exports.postPostProduct = (req, res) => {
     );
   }
 
-  const product = new Product(
-    product_title,
-    product_description,
-    product_imgUrl,
-    product_price,
-    product_id
-  );
+  // TODO: Check if product with the same title exists and show error
+  // Add a new product
+  if(!product_id) {
+    const product = new Product({
+      title: product_title,
+      description: product_description,
+      imgUrl: product_imgUrl,
+      price: product_price
+    });
 
-  product.save()
-    .then(result => {
-      renderPage(result);
-    })
-    .catch(err => {
-      console.log(err);
-    })
+    product
+      .save() // mongoose provides save method
+      .then(result => {
+        renderPage(result, false);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+  // Edit existing product
+  else {
+    Product
+      .findById(product_id)// mongoose provides this method
+      .then(product => {
+        product.title = product_title;
+        product.description = product_description;
+        product.imgUrl = product_imgUrl;
+        product.price = product_price;
+
+        return product.save() // mongoose provides save method
+      })
+      .then(result => {
+        renderPage(result);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
 }
 
 /**
@@ -92,16 +118,22 @@ exports.postPostProduct = (req, res) => {
 exports.getDeleteProduct = (req, res) => {
   const productId = req.params.productId;
 
-  Product.deleteById(productId)
-    .then(title => {
-      res.render(
-        'admin/delete-product',
-        {
-          pageTitle: 'Product deleted: ',
-          path: '/admin/delete-product',
-          title: title
-        }
-      );
+  Product.findByIdAndDelete(productId)
+    .then(product => {
+      return product;
+    })
+    .then(result => {
+      Product.find().then(products => {
+        res.render(
+          'admin/delete-product',
+          {
+            pageTitle: 'Product deleted: ',
+            path: '/admin/delete-product',
+            title: result ? result.title : '',
+            products: products
+          }
+        );
+    })
     })
     .catch(err => {
       console.log(err);
@@ -119,14 +151,15 @@ exports.getAdminProducts = (req, res) => {
     res.render(
       'admin/products-list',
       {
-        pageTitle: 'Your admin area for our amazing shop',
+        pageTitle: 'Admin area for our amazing shop',
         path: '/admin',
         products: content
       }
     );
   };
 
-  Product.fetchAll()
+  Product
+    .find() // mongoose provides this method
     .then( products => {
       renderPage(products);
     })

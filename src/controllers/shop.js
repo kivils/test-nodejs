@@ -17,7 +17,8 @@ exports.getProducts = (req, res) => {
     );
   };
 
-  Product.fetchAll()
+  Product
+    .find()// mongoose method
     .then( products => {
       renderPage(products);
     })
@@ -45,7 +46,7 @@ exports.getProduct = (req, res) => {
     );
   };
 
-  Product.fetchById(productId)
+  Product.findById(productId)
     .then(product => {
       renderPage(product);
     })
@@ -53,18 +54,6 @@ exports.getProduct = (req, res) => {
       console.log(err);
       renderPage(false);
     });
-
-    // Another approach with findAll (return an array with 1 element)
-    // Product.findAll({
-    //   where: { id: productId }
-    // })
-    //   .then(products => {
-    //     renderPage(products[0]);
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //     renderPage(false);
-    //   })
 };
 
 /**

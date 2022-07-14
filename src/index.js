@@ -1,10 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const mongodb = require('mongodb');
+const mongoose = require('mongoose');
 
 const mainController = require('./controllers/main');
-const mongoConnect = require('./helpers/database').mongoConnect;
 
 const User = require('./models/user');
 
@@ -60,21 +59,21 @@ app.use(express.static(publicDirectory));
 /**
  * Middleware to retrieve admin user; then it can be used throughout an app
  */
-app.use((req, res, next) => {
-  User.fetchById('62cbf0caaaa85f73485c63b4') // Manually created user in mongodb
-    .then(user => {
-      req.user = new User(
-        user.name,
-        user.username,
-        user.email,
-        user.cart, // { items: [], totalPrice: 0 }
-        user._id
-      );
-      next();
-    })
-    .catch(err => {
-      console.log(err);
-    })
+// app.use((req, res, next) => {
+  // User.fetchById('62cbf0caaaa85f73485c63b4') // Manually created user in mongodb
+  //   .then(user => {
+  //     req.user = new User(
+  //       user.name,
+  //       user.username,
+  //       user.email,
+  //       user.cart, // { items: [], totalPrice: 0 }
+  //       user._id
+  //     );
+  //     next();
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   })
 
   // TODO: Leftovers: try to reimplement this
   // User.fetchAll()
@@ -103,7 +102,7 @@ app.use((req, res, next) => {
   //   })
   //   .catch(err => console.log(err));
   //   next();
-});
+// });
 
 /**
  * Routes started with /users
@@ -116,6 +115,10 @@ app.use(defaultRouter);
 
 app.use(mainController.getPageNotFound);
 
-mongoConnect(() => {
-  app.listen(3000);
-});
+mongoose.connect('mongodb+srv://root-user4:yIiW6OHSJs847C5e@cluster0.jylqx0x.mongodb.net/shop?retryWrites=true&w=majority')
+  .then(() => {
+    app.listen('3000');
+  })
+  .catch(err => {
+    console.log(err);
+  });

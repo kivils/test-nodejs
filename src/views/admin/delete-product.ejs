@@ -4,13 +4,35 @@
 
 <header class="bg-white shadow">
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold text-gray-900"><%= pageTitle %> <span style="color: green;"><%= title %></span></h1>
+        <h1 class="text-3xl font-bold text-gray-900">
+            <% if(title) { %>
+                <%= pageTitle %> <span class="text-green-700 font-bold"><%= title %></span>
+            <% } else { %>
+                Product not found
+            <% } %>
+        </h1>
     </div>
 </header>
 <main>
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
-            <p>The product <%= title %> is deleted</p>
+            <% if(title) { %>
+                <p class="text-green-700 mb-4">The product <%= title %> is deleted</p>
+            <% } else { %>
+                <p class="text-red-700 mb-4">Product to delete is not found</p>
+            <% } %>
+            <% if(products.length) {%>
+                <h2 class="font-sans text-xl text-gray-900 mb-4">Products already added:</h2>
+                <ul class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                    <% products.map(product => { %>
+                        <li class="group relative">
+                            <%- include('../_includes/product-item', { product: product, isAdmin: true }) %>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+            <h2 class="font-sans text-xl text-gray-900 mb-4">No products so far</h2>
+            <% } %>
         </div>
     </div>
 </main>
