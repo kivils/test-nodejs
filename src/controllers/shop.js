@@ -62,13 +62,14 @@ exports.getProduct = (req, res) => {
  * @param res
  */
 exports.getCart = (req, res) => {
-  req.user.getCartItems()
-    .then(products => {
+  req.user
+    .populate('cart.items.productId')
+    .then(user => {
       res.render('shop/cart', {
         pageTitle: 'Your shopping cart',
         path: '/shop/cart',
-        cart: req.user.cart,
-        products: products
+        cart: user.cart,
+        products: user.cart.items
       });
     })
     .catch(err => {
@@ -84,7 +85,7 @@ exports.getCart = (req, res) => {
 exports.addPostCart = (req, res) => {
   const productId = req.body.product_id;
 
-  Product.fetchById(productId)
+  Product.findById(productId)
     .then(product => {
       return req.user.addToCart(product);
     })
