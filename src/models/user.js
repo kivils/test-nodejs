@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const {deleteModel} = require("mongoose");
 
 const Schema = mongoose.Schema;
 
@@ -97,23 +96,22 @@ userSchema.methods.deleteFromCart = function(productId) {
  * @returns {*}
  */
 userSchema.methods.updateAmountInCart = function(productId, increase) {
-  let newQuantity, totalPrice;
-
   return this.populate('cart.items.productId')
     .then(user => {
       const cartProduct = this.cart.items.find(cp => {
         return cp.productId._id.toString() === productId.toString();
       });
       const updatedCartItems = [ ...user.cart.items ];
-
       const currentQuantity = cartProduct.quantity;
 
-      newQuantity = increase ?
+      const newQuantity = increase ?
         (currentQuantity + 1) :
         (currentQuantity - 1);
-      totalPrice = increase ?
+
+      const totalPrice = increase ?
         (Number(user.cart.totalPrice) + Number(cartProduct.productId.price)) :
         (Number(user.cart.totalPrice) - Number(cartProduct.productId.price));
+
       cartProduct.quantity = newQuantity;
 
       user.cart = totalPrice === 0 ? {
@@ -131,158 +129,17 @@ userSchema.methods.updateAmountInCart = function(productId, increase) {
     })
 };
 
+/**
+ * Clear cart
+ * @returns {*}
+ */
+userSchema.methods.clearCart = function() {
+  this.cart = {
+    items: [],
+    totalPrice: 0
+  };
+
+  return this.save();
+};
+
 module.exports = mongoose.model('User', userSchema);
-
-//   /**
-//    * Update product amount in cart
-//    * @param productId
-//    * @param increase
-//    * @returns {Promise<Result> | Promise<any>}
-//    */
-//   updateAmountInCart(productId, increase) {
-//     let newQuantity, totalPrice;
-//     const db = getDb();
-//
-//     const updatedCartItems = [ ...this.cart.items ];
-//
-//     return Product.fetchById(productId)
-//       .then(product => {
-//         const cartProductIndex = this.cart.items.findIndex(cp => {
-//           return cp.productId.toString() === product._id.toString();
-//         });
-//
-//         const currentQuantity = this.cart.items[cartProductIndex].quantity;
-//
-//         newQuantity = increase ?
-//           (currentQuantity + 1) :
-//           (currentQuantity - 1); // TODO: Fix
-//         totalPrice = increase ?
-//           (Number(this.cart.totalPrice) + Number(product.price)) :
-//           (Number(this.cart.totalPrice) - Number(product.price));
-//         updatedCartItems[cartProductIndex].quantity = newQuantity;
-//
-//         const updatedCart = totalPrice === 0 ? {
-//           items: [],
-//           totalPrice: 0
-//         } : {
-//           items: updatedCartItems,
-//           totalPrice: totalPrice
-//         }
-//
-//         db.collection('users')
-//           .updateOne(
-//             { _id: new ObjectId(this._id) },
-//             { $set: { cart: updatedCart } }
-//           );
-//       })
-//       .catch(err => {
-//         console.log(err);
-//       })
-//   };
-
-
-
-//   /**
-//    * Add cart to orders
-//    * @returns {Promise<Result> | Promise<any>}
-//    */
-//   addOrder() {
-//     const db = getDb();
-//
-//     return this.getCartItems()
-//       .then(products => {
-//         const order = {
-//           items: products,
-//           totalPrice: this.cart.totalPrice,
-//           user: {
-//             _id: new ObjectId(this._id),
-//             name: this.name
-//           }
-//         }
-//
-//         return db.collection('orders').insertOne(order)
-//       })
-//       .then(() => {
-//         this.cart = { items: [], totalPrice: 0 };
-//         return db.collection('users')
-//           .updateOne(
-//             {_id: new ObjectId(this._id)},
-//             { $set: {
-//               cart: {
-//                 items: [],
-//                 totalPrice: 0
-//               }
-//             }}
-//           )
-//       })
-//       .catch(err => {
-//         console.log(err);
-//       })
-//   };
-//
-//   /**
-//    * Get orders for the user
-//    * @returns {Promise<Result> | Promise<any>}
-//    */
-//   getOrders() {
-//     return getDb().collection('orders')
-//       .find({ 'user._id': new ObjectId(this._id) })
-//       .toArray()
-//       .then(orders => {
-//         return orders;
-//       })
-//       .catch(err => {
-//         console.log(err);
-//       });
-//   };
-//
-//   /**
-//    * Get one order
-//    * @param orderId
-//    * @returns {Promise<Result> | Promise<any>}
-//    */
-//   getOrder(orderId) {
-//     return getDb().collection('orders')
-//       .findOne({ _id: new ObjectId(orderId) })
-//         .then(order => {
-//           return order;
-//         })
-//         .catch(err => {
-//           console.log(err);
-//         })
-//   }
-//
-//   /**
-//    * Fetch all users
-//    * @returns {Promise<Result> | Promise<any>}
-//    */
-//   static fetchAll() {
-//     return getDb().collection('users')
-//       .find()
-//       .toArray()
-//       .then(users => {
-//         return users;
-//       })
-//       .catch(err => {
-//         console.log(err);
-//       });
-//   };
-//
-//   /**
-//    * Fetch user by id
-//    * @param userId
-//    * @returns {Promise<Result> | Promise<any>}
-//    */
-//   static fetchById(userId) {
-//     return getDb().collection('users')
-//       .findOne({ _id: new ObjectId(userId) })
-//       .then(user => {
-//         return user;
-//       })
-//       .catch(err => {
-//         console.log(err);
-//       });
-//   };
-// }
-//
-// module.exports = User;

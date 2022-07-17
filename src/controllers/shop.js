@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const Order = require('../models/order');
 
 /**
  * List of all products
@@ -153,7 +154,28 @@ exports.getCheckout = (req, res) => {
  */
 exports.postOrder = (req, res) => {
   req.user
-    .addOrder()
+    .populate('cart.items.productId')
+    .then(user => {
+      const products = user.cart.items.map(item => {
+        return {
+          productId: { ...item.productId._doc },
+          quantity: item.quantity
+        }
+      })
+      const order = new Order({
+        items: products,
+        totalPrice: user.cart.totalPrice,
+        user: {
+          userId: user._id,
+          name: user.name
+        }
+      });
+
+      return order.save();
+    })
+    .then(() => {
+      return req.user.clearCart();
+    })
     .then(() => {
       res.redirect('/shop/orders');
     })
@@ -168,8 +190,7 @@ exports.postOrder = (req, res) => {
  * @param res
  */
 exports.getOrders = (req, res) => {
-  req.user
-    .getOrders()
+  Order.find({ 'user.userId': req.user._id })
     .then(orders => {
       res.render('shop/orders', {
         pageTitle: 'Your orders',
@@ -190,8 +211,7 @@ exports.getOrders = (req, res) => {
 exports.getOrder = (req, res) => {
   const orderId = req.params.orderId;
 
-  req.user
-    .getOrder(orderId)
+  Order.findOne({ '_id': orderId })
     .then(order => {
       res.render('shop/order-card', {
         pageTitle: 'Order',
