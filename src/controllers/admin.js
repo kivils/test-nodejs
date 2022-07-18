@@ -15,7 +15,8 @@ exports.getPostProduct = (req, res) => {
         pageTitle: productId ? 'Edit product' : 'Add a new product',
         path: '/admin',
         product: content,
-        submitted: false
+        submitted: false,
+        isLogged: req.session.isLogged
       }
     );
   };
@@ -62,7 +63,8 @@ exports.postPostProduct = (req, res) => {
         pageTitle: (product_id ? 'Product updated: ': 'New product added: '),
         product: content,
         path: '/admin',
-        submitted: true
+        submitted: true,
+        isLogged: req.session.isLogged
       }
     );
   }
@@ -131,7 +133,8 @@ exports.getDeleteProduct = (req, res) => {
             pageTitle: 'Product deleted: ',
             path: '/admin/delete-product',
             title: result ? result.title : '',
-            products: products
+            products: products,
+            isLogged: req.session.isLogged
           }
         );
     })
@@ -154,7 +157,8 @@ exports.getAdminProducts = (req, res) => {
       {
         pageTitle: 'Admin area for our amazing shop',
         path: '/admin',
-        products: content
+        products: content,
+        isLogged: req.session.isLogged
       }
     );
   };

@@ -13,7 +13,8 @@ exports.getProducts = (req, res) => {
       {
         pageTitle: 'Our amazing shop',
         path: '/shop',
-        products: content
+        products: content,
+        isLogged: req.session.isLogged
       }
     );
   };
@@ -42,7 +43,8 @@ exports.getProduct = (req, res) => {
       {
         pageTitle: content.title || 'Product doesn\'t exist',
         path: '/shop',
-        product: content
+        product: content,
+        isLogged: req.session.isLogged
       }
     );
   };
@@ -70,7 +72,8 @@ exports.getCart = (req, res) => {
         pageTitle: 'Your shopping cart',
         path: '/shop/cart',
         cart: user.cart,
-        products: user.cart.items
+        products: user.cart.items,
+        isLogged: req.session.isLogged
       });
     })
     .catch(err => {
@@ -143,7 +146,8 @@ exports.postUpdateAmountInCart = (req, res) => {
 exports.getCheckout = (req, res) => {
   res.render('shop/checkout', {
     pageTitle: 'You are one step away from having pour amazing products!',
-    path: '/shop/checkout'
+    path: '/shop/checkout',
+    isLogged: req.session.isLogged
   });
 };
 
@@ -195,7 +199,8 @@ exports.getOrders = (req, res) => {
       res.render('shop/orders', {
         pageTitle: 'Your orders',
         path: '/shop/orders',
-        orders: orders
+        orders: orders,
+        isLogged: req.session.isLogged
       });
     })
     .catch( err => {
@@ -216,7 +221,8 @@ exports.getOrder = (req, res) => {
       res.render('shop/order-card', {
         pageTitle: 'Order',
         path: '/shop/order',
-        order: order
+        order: order,
+        isLogged: req.session.isLogged
       });
     })
     .catch(err => {

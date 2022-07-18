@@ -32,6 +32,15 @@ const userSchema = new Schema({
 });
 
 /**
+ * Check cookies for loggedIn=true
+ * @param req
+ * @returns {*}
+ */
+userSchema.methods.isAuth = function(req) {
+  return req.session.isLogged;
+}
+
+/**
  * Add product to cart
  * @param product
  * @returns {*}

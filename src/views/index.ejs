@@ -15,9 +15,11 @@
                 <li>
                     <a class="text-gray-900 underline hover:text-gray-600 hover:no-underline" href="/shop">check, choose and purchase our amazing products</a>
                 </li>
+                <% if(!isLogged) { %>
                 <li>
                     <a class="text-gray-900 underline hover:text-gray-600 hover:no-underline" href="/users">register here</a>
                 </li>
+                <% } %>
                 <li>
                     <a class="text-gray-900 underline hover:text-gray-600 hover:no-underline" href="/users">see other users here</a>
                 </li>

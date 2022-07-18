@@ -12,7 +12,17 @@ exports.postCreateUsers = (req, res) => {
     email
   } = req.body;
 
-  const user = new User(name, username, email);
+  const user = new User({
+    name: name,
+    username: username,
+    email: email,
+    cart: {
+      items: [],
+      totalPrice: 0
+    }
+  });
+  // Set a session
+  req.session.isLogged = true;
 
   user.save()
     .then( user => {
@@ -21,7 +31,8 @@ exports.postCreateUsers = (req, res) => {
         {
           pageTitle: 'Create user',
           path: '/users/create-user',
-          user: user
+          user: user,
+          isLogged: req.session.isLogged
         }
       );
     })
@@ -36,12 +47,13 @@ exports.postCreateUsers = (req, res) => {
  * @param res
  */
 exports.getUsers = (req, res) => {
-  User.fetchAll()
+  User.find()
     .then(users => {
       res.render('users/users', {
         pageTitle: 'Our people',
         users: users,
-        path: '/users'
+        path: '/users',
+        isLogged: req.session.isLogged
       });
     })
     .catch(err => {
@@ -57,12 +69,13 @@ exports.getUsers = (req, res) => {
 exports.getUser = (req, res) => {
   const userId = req.params.userId;
 
-  User.fetchById(userId)
+  User.findOne({ '_id': userId })
     .then(user => {
       res.render('users/user-card', {
         pageTitle: 'User ' + user.name,
         path: '/users',
-        user: user
+        user: user,
+        isLogged: req.session.isLogged
       });
     })
     .catch(err => {
@@ -76,5 +89,31 @@ exports.getUser = (req, res) => {
  * @param res
  */
 exports.getCreateUsers = (req, res) => {
+  res.redirect('/');
+};
+
+exports.postLogin = (req, res) => {
+  User.findById('62d0533c8a209e09491a86a5')
+    .then(user => {
+      // Save user in session
+      req.session.isLogged = true;
+      req.session.user = user;
+      res.redirect('/')
+    })
+    .catch(err => {
+      console.log(err);
+    })
+};
+
+exports.getLogin = (req, res) => {
+  res.render('users/login', {
+    pageTitle: 'Login',
+    path:'/users/login',
+    isLogged: req.session.isLogged
+  })
+};
+
+exports.getLogout = (req, res) => {
+  req.session.isLogged = false;
   res.redirect('/');
 };

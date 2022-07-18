@@ -2,12 +2,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const MongoDbStore = require('connect-mongodb-session')(session);
 
 const mainController = require('./controllers/main');
 
 const User = require('./models/user');
 
 const publicDirectory = path.join(__dirname, '..', 'public');
+
+const MONGODB_URI = 'mongodb+srv://root-user4:yIiW6OHSJs847C5e@cluster0.jylqx0x.mongodb.net/shop';
 
 /**
  * !!! FOR FRONTEND LIVE RELOAD
@@ -34,6 +38,10 @@ const shopRouter = require('./routes/shop');
 const adminRouter = require('./routes/admin');
 
 const app = express();
+const store = new MongoDbStore({
+  uri: MONGODB_URI,
+  collection: 'sessions'
+});
 
 /**
  * TEMPLATING ENGINE SETUP:
@@ -57,46 +65,16 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(publicDirectory));
 
 /**
- * Middleware to retrieve admin user; then it can be used throughout an app
+ * Middleware for sessions
  */
-app.use((req, res, next) => {
-  User.findById('62d0533c8a209e09491a86a5')
-    .then(user => {
-      req.user = user;
-      next();
-    })
-    .catch(err => {
-      console.log(err);
-    })
-
-  // TODO: Leftovers: try to reimplement this
-  // User.fetchAll()
-  //   .then(users => {
-  //     if(users.length > 0) {
-  //       return users[0];
-  //     }
-  //     else { // Create default admin user if no users in db yet
-  //       const user = new User(
-  //         'Admin',
-  //         'admin-nick',
-  //         'admin@admin.admin'
-  //       );
-  //
-  //       user.save(this)
-  //         .then(user => {
-  //           const currentUserId = new mongodb.ObjectId(user._id);
-  //
-  //           User.fetchById(currentUserId)
-  //             .then(user => {
-  //               req.user = user;
-  //             })
-  //         })
-  //         .catch(err => console.log(err));
-  //     }
-  //   })
-  //   .catch(err => console.log(err));
-  //   next();
-});
+app.use(
+  session({
+    secret: 'Some secret',
+    resave: false,
+    saveUninitialized: false,
+    store: store
+  })
+);
 
 /**
  * Routes started with /users
@@ -109,7 +87,9 @@ app.use(defaultRouter);
 
 app.use(mainController.getPageNotFound);
 
-mongoose.connect('mongodb+srv://root-user4:yIiW6OHSJs847C5e@cluster0.jylqx0x.mongodb.net/shop?retryWrites=true&w=majority')
+//app.use(MongoDbStore)
+
+mongoose.connect(MONGODB_URI)
   .then(() => {
     User.findOne()
       .then(user => {
