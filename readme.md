@@ -2,7 +2,13 @@
 
 This is the project for the course https://www.udemy.com/course/nodejs-the-complete-guide/
 
-We are building an internet-shop
+We are building an internet-shop.
+
+## Scripts
+
+- `yarn dev` starts app with .env variables
+  - `.env.example` - shows example of env variables used in the project.
+- `yarn start` - default app start, without env variables; useful with docker of cloud with some additional setup
 
 ## What's covered
 
@@ -12,4 +18,4 @@ We are building an internet-shop
 - Saving data in the file
 - Storing data in databases
   - MySQL
-- ...
+  - MongoDB

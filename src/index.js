@@ -11,7 +11,7 @@ const User = require('./models/user');
 
 const publicDirectory = path.join(__dirname, '..', 'public');
 
-const MONGODB_URI = 'mongodb+srv://root-user4:yIiW6OHSJs847C5e@cluster0.jylqx0x.mongodb.net/shop';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 /**
  * !!! FOR FRONTEND LIVE RELOAD
