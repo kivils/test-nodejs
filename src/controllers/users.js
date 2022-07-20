@@ -9,37 +9,70 @@ exports.postCreateUsers = (req, res) => {
   const {
     name,
     username,
-    email
+    email,
+    password
   } = req.body;
 
-  const user = new User({
-    name: name,
-    username: username,
-    email: email,
-    cart: {
-      items: [],
-      totalPrice: 0
-    }
-  });
-  // Set a session
-  req.session.isLogged = true;
+  User.findOne({ 'email': email })
+    .then(user => {
+      if(user) {
+        console.log('User with this email already exists');
+        res.render(
+          'users/create-user',
+          {
+            pageTitle: 'Create user',
+            path: '/users/create-user',
+            user: null,
+            userEmail: email,
+            isLogged: req.session.isLogged
+          }
+        );
+      }
+      else {
+        const user = new User({
+          name: name,
+          username: username,
+          email: email,
+          password: password,
+          cart: {
+            items: [],
+            totalPrice: 0
+          }
+        });
 
-  user.save()
-    .then( user => {
-      res.render(
-        'users/create-user',
-        {
-          pageTitle: 'Create user',
-          path: '/users/create-user',
-          user: user,
-          isLogged: req.session.isLogged
+        user.save()
+          .then( user => {
+            req.session.user = user;
+            res.render(
+              'users/create-user',
+              {
+                pageTitle: 'Create user',
+                path: '/users/create-user',
+                user: user,
+                isLogged: req.session.isLogged
+              }
+            );
+          })
+          .catch(err => {
+            console.log(err);
+          })
         }
-      );
-    })
-    .catch(err => {
-      console.log(err);
-    })
-}
+      })
+
+};
+
+/**
+ * Signup form
+ * @param req
+ * @param res
+ */
+exports.getSignup = (req, res) => {
+  res.render('users/signup', {
+    pageTitle: 'Sign  up',
+    path:'/users/signup',
+    isLogged: req.session.isLogged
+  })
+};
 
 /**
  * Get users
@@ -92,6 +125,11 @@ exports.getCreateUsers = (req, res) => {
   res.redirect('/');
 };
 
+/**
+ * Login post
+ * @param req
+ * @param res
+ */
 exports.postLogin = (req, res) => {
   User.findById('62d0533c8a209e09491a86a5')
     .then(user => {
@@ -108,6 +146,11 @@ exports.postLogin = (req, res) => {
     })
 };
 
+/**
+ * Login form
+ * @param req
+ * @param res
+ */
 exports.getLogin = (req, res) => {
   res.render('users/login', {
     pageTitle: 'Login',
@@ -116,6 +159,11 @@ exports.getLogin = (req, res) => {
   })
 };
 
+/**
+ * Logout
+ * @param req
+ * @param res
+ */
 exports.getLogout = (req, res) => {
   req.session.destroy(err => {
     console.log(err);

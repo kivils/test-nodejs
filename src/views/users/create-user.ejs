@@ -5,7 +5,11 @@
 <header class="bg-white shadow">
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold text-gray-900">
-            Wow <span class="text-green-700"><%= user.username %></span>! Welcome to the club :-) !
+            <% if(user) { %>
+                Wow <span class="text-green-700"><%= user.username %></span>! Welcome to the club :-) !
+            <% } else { %>
+                <span class="text-red-700">User with email '<%= userEmail %>' already exists</span>
+            <% } %>
         </h1>
     </div>
 </header>
@@ -13,7 +17,11 @@
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
             <p class="mb-4">
-                Now you are <a class="text-gray-900 underline hover:text-gray-600 hover:no-underline" href="/users">one of us</a>!
+                <% if(user) { %>
+                    Now you are <a class="text-gray-900 underline hover:text-gray-600 hover:no-underline" href="/users">one of us</a>!
+                <% } else { %>
+                    Please try to <a class="underline hover:no-underline" href="/users/signup">register with another email</a>, or <a class="underline hover:no-underline" href="/users/login">login using '<%= userEmail %>'</a>
+                <% } %>
             </p>
         </div>
     </div>

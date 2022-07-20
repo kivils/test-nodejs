@@ -23,6 +23,12 @@ router.get('/login', usersController.getLogin);
 // /users/logout => GET
 router.get('/logout', usersController.getLogout);
 
+// /users/signup => POST
+router.post('/signup', usersController.postCreateUsers);
+
+// // /users/signup => GET
+router.get('/signup', usersController.getSignup);
+
 // Get user
 router.get('/:userId', usersController.getUser);
 
