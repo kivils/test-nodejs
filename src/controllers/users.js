@@ -98,7 +98,10 @@ exports.postLogin = (req, res) => {
       // Save user in session
       req.session.isLogged = true;
       req.session.user = user;
-      res.redirect('/')
+      req.session.save(err => {
+        console.log(err);
+        res.redirect('/');
+      })
     })
     .catch(err => {
       console.log(err);
@@ -114,6 +117,8 @@ exports.getLogin = (req, res) => {
 };
 
 exports.getLogout = (req, res) => {
-  req.session.isLogged = false;
-  res.redirect('/');
+  req.session.destroy(err => {
+    console.log(err);
+    res.redirect('/');
+  });
 };
