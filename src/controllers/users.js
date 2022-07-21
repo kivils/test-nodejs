@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 /**
@@ -16,7 +17,6 @@ exports.postCreateUsers = (req, res) => {
   User.findOne({ 'email': email })
     .then(user => {
       if(user) {
-        console.log('User with this email already exists');
         res.render(
           'users/create-user',
           {
@@ -29,34 +29,41 @@ exports.postCreateUsers = (req, res) => {
         );
       }
       else {
-        const user = new User({
-          name: name,
-          username: username,
-          email: email,
-          password: password,
-          cart: {
-            items: [],
-            totalPrice: 0
-          }
-        });
+        return bcrypt.hash(password, 12);
+      }
+    })
+    .then(passEncrypted => {
+      if(passEncrypted === undefined) {
+        return;
+      }
 
-        user.save()
-          .then( user => {
-            req.session.user = user;
-            res.render(
-              'users/create-user',
-              {
-                pageTitle: 'Create user',
-                path: '/users/create-user',
-                user: user,
-                isLogged: req.session.isLogged
-              }
-            );
-          })
-          .catch(err => {
-            console.log(err);
-          })
+      const user = new User({
+        name: name,
+        username: username,
+        email: email,
+        password: passEncrypted,
+        cart: {
+          items: [],
+          totalPrice: 0
         }
+      });
+
+      user.save()
+        .then( user => {
+          req.session.user = user;
+          res.render(
+            'users/create-user',
+            {
+              pageTitle: 'User created!',
+              path: '/users/create-user',
+              user: user,
+              isLogged: req.session.isLogged
+            }
+          );
+        })
+        .catch(err => {
+          console.log(err);
+        });
       })
 
 };

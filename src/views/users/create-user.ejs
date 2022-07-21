@@ -16,13 +16,19 @@
 <main>
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
-            <p class="mb-4">
-                <% if(user) { %>
+            <% if(user) { %>
+                <p class="mb-4">
                     Now you are <a class="text-gray-900 underline hover:text-gray-600 hover:no-underline" href="/users">one of us</a>!
-                <% } else { %>
+                </p>
+                <h2 class="font-sans text-xl text-gray-900 mb-4">
+                    Please login now with your email
+                </h2>
+                <%- include('../_includes/login-form') %>
+            <% } else { %>
+                <p class="mb-4">
                     Please try to <a class="underline hover:no-underline" href="/users/signup">register with another email</a>, or <a class="underline hover:no-underline" href="/users/login">login using '<%= userEmail %>'</a>
-                <% } %>
-            </p>
+                </p>
+            <% } %>
         </div>
     </div>
 </main>
