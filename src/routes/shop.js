@@ -2,16 +2,17 @@ const express = require('express');
 
 const router = express.Router();
 
+const isLogged = require('../middleware/is-logged');
 const shopController = require('../controllers/shop');
 
-router.post('/shop/cart', shopController.addPostCart);
-router.get('/shop/cart', shopController.getCart);
-router.post('/shop/delete-item-from-cart', shopController.postCartDeleteProduct);
-router.post('/shop/update-item-in-cart', shopController.postUpdateAmountInCart);
+router.post('/shop/cart', isLogged, shopController.addPostCart);
+router.get('/shop/cart', isLogged, shopController.getCart);
+router.post('/shop/delete-item-from-cart', isLogged, shopController.postCartDeleteProduct);
+router.post('/shop/update-item-in-cart', isLogged, shopController.postUpdateAmountInCart);
 // //
-router.post('/shop/orders', shopController.postOrder);
-router.get('/shop/orders', shopController.getOrders);
-router.use('/shop/orders/:orderId', shopController.getOrder);
+router.post('/shop/orders', isLogged, shopController.postOrder);
+router.get('/shop/orders', isLogged, shopController.getOrders);
+router.use('/shop/orders/:orderId', isLogged, shopController.getOrder);
 
 // // router.use('/shop/checkout', shopController.getCheckout);
 //

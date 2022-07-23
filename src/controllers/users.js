@@ -138,15 +138,36 @@ exports.getCreateUsers = (req, res) => {
  * @param res
  */
 exports.postLogin = (req, res) => {
-  User.findById('62d0533c8a209e09491a86a5')
+  const { email, password } = req.body;
+
+  User.findOne({ email: email})
     .then(user => {
-      // Save user in session
-      req.session.isLogged = true;
-      req.session.user = user;
-      req.session.save(err => {
-        console.log(err);
-        res.redirect('/');
-      })
+      if(!user) {
+        return res.redirect('/users/login');
+      }
+
+      bcrypt
+        .compare(password, user.password)
+        .then(match => { // Both matching and not matching passwords
+          if(match) {
+            // Save user in session
+            req.session.isLogged = true;
+            req.session.user = user;
+
+            return req.session.save(err => {
+              if(err) {
+                console.log(err);
+              }
+
+              res.redirect('/');
+            })
+          }
+
+          res.redirect('/users/login')
+        })
+        .catch(err => {
+          console.log(err);
+        })
     })
     .catch(err => {
       console.log(err);

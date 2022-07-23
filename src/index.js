@@ -113,6 +113,7 @@ mongoose.connect(MONGODB_URI)
             name: 'Admin',
             username: 'admin',
             email: 'admin-test@email.test',
+            password: '$2a$12$hpmg96SllCVK82q7sg0M3O6EGx75JSwVccNUH3qm4ueXzZlk9Kfka', // '123'
             cart: {
               items: [],
               totalPrice: 0
