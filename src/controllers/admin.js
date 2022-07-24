@@ -171,7 +171,7 @@ exports.getAdminProducts = (req, res) => {
 };
 
 /**
- * Redirect if come directly to add product page
+ * Redirect if get directly to add product page
  * @param req
  * @param res
  */

@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDbStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
+const flash = require('connect-flash');
 
 const csrfProtection = csrf();
 const mainController = require('./controllers/main');
@@ -83,6 +84,9 @@ app.use(
  */
 app.use(csrfProtection);
 
+/**
+ * Middleware to set up a user
+ */
 app.use((req, res, next) => {
   if(!req.session.user) {
     return next();
@@ -98,11 +102,19 @@ app.use((req, res, next) => {
     })
 });
 
+/**
+ * Middleware to set locals variables to responses
+ */
 app.use((req, res, next) => {
   res.locals.isLogged = req.session.isLogged;
   res.locals.scrfToken = req.csrfToken();
   next();
 })
+
+/**
+ * Middleware to pass errors to session
+ */
+app.use(flash());
 
 /**
  * Routes started with /users

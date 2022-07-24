@@ -138,6 +138,8 @@ exports.postLogin = (req, res) => {
   User.findOne({ email: email})
     .then(user => {
       if(!user) {
+        // flash format: ('error',  ['string1', 'string2', ...])
+        req.flash('error', [ 'No user with email "' + email + '" found' ]);
         return res.redirect('/users/login');
       }
 
@@ -158,6 +160,7 @@ exports.postLogin = (req, res) => {
             })
           }
 
+          req.flash('error', [ 'Incorrect password' ]);
           res.redirect('/users/login')
         })
         .catch(err => {
@@ -175,9 +178,20 @@ exports.postLogin = (req, res) => {
  * @param res
  */
 exports.getLogin = (req, res) => {
+  // flash format: ('error',  ['string1', 'string2', ...])
+  let info = req.flash('error');
+
+  if(info.length > 0) {
+    errorMessage = info[0];
+  }
+  else {
+    errorMessage = null;
+  }
+
   res.render('users/login', {
     pageTitle: 'Login',
-    path:'/users/login'
+    path:'/users/login',
+    errorMessage: errorMessage
   })
 };
 
