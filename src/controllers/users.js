@@ -182,8 +182,7 @@ exports.postLogin = (req, res) => {
 exports.getLogin = (req, res) => {
   res.render('users/login', {
     pageTitle: 'Login',
-    path:'/users/login',
-    isLogged: req.session.isLogged
+    path:'/users/login'
   })
 };
 
