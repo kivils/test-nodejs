@@ -23,8 +23,7 @@ exports.postCreateUsers = (req, res) => {
             pageTitle: 'Create user',
             path: '/users/create-user',
             user: null,
-            userEmail: email,
-            isLogged: req.session.isLogged
+            userEmail: email
           }
         );
       }
@@ -56,8 +55,7 @@ exports.postCreateUsers = (req, res) => {
             {
               pageTitle: 'User created!',
               path: '/users/create-user',
-              user: user,
-              isLogged: req.session.isLogged
+              user: user
             }
           );
         })
@@ -76,8 +74,7 @@ exports.postCreateUsers = (req, res) => {
 exports.getSignup = (req, res) => {
   res.render('users/signup', {
     pageTitle: 'Sign  up',
-    path:'/users/signup',
-    isLogged: req.session.isLogged
+    path:'/users/signup'
   })
 };
 
@@ -92,8 +89,7 @@ exports.getUsers = (req, res) => {
       res.render('users/users', {
         pageTitle: 'Our people',
         users: users,
-        path: '/users',
-        isLogged: req.session.isLogged
+        path: '/users'
       });
     })
     .catch(err => {
@@ -114,8 +110,7 @@ exports.getUser = (req, res) => {
       res.render('users/user-card', {
         pageTitle: 'User ' + user.name,
         path: '/users',
-        user: user,
-        isLogged: req.session.isLogged
+        user: user
       });
     })
     .catch(err => {

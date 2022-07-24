@@ -8,8 +8,7 @@ exports.getMainPage = (req, res) => {
     'index',
       {
         path: '/',
-        pageTitle: 'Home page',
-        isLogged: req.session.isLogged
+        pageTitle: 'Home page'
       }
   );
 }
@@ -26,8 +25,7 @@ exports.getPageNotFound = (req, res) => {
       '404',
       {
         path: '',
-        pageTitle: 'Page not found',
-        isLogged: req.session.isLogged
+        pageTitle: 'Page not found'
       }
     );
 }
