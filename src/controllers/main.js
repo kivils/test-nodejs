@@ -4,11 +4,22 @@
  * @param res
  */
 exports.getMainPage = (req, res) => {
+  // flash format: ('error',  ['string1', 'string2', ...])
+  let success = req.flash('success');
+
+  if(success.length > 0) {
+    successMessage = success[0];
+  }
+  else {
+    successMessage = null;
+  }
+
   res.render(
     'index',
       {
         path: '/',
-        pageTitle: 'Home page'
+        pageTitle: 'Home page',
+        successMessage: successMessage
       }
   );
 }

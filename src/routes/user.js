@@ -29,6 +29,18 @@ router.post('/signup', usersController.postCreateUsers);
 // // /users/signup => GET
 router.get('/signup', usersController.getSignup);
 
+// // /users/reset=password => POST
+router.post('/reset-password', usersController.postResetPassword);
+
+// // /users/reset-password form => GET
+router.get('/reset-password', usersController.getResetPassword);
+
+// // /users/new-password => POST
+router.post('/new-password', usersController.postNewPassword);
+
+// // /users/new-password form => GET
+router.get('/new-password/:token', usersController.getNewPassword);
+
 // Get user
 router.get('/:userId', usersController.getUser);
 
