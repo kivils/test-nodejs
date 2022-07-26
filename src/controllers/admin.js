@@ -90,7 +90,7 @@ exports.postPostProduct = (req, res) => {
   // Edit existing product
   else {
     Product
-      .findById(product_id)// mongoose provides this method
+      .findById({ _id: product_id, userId: req.user._id })// mongoose provides this method
       .then(product => {
         product.title = product_title;
         product.description = product_description;
@@ -101,9 +101,6 @@ exports.postPostProduct = (req, res) => {
       })
       .then(result => {
         renderPage(result);
-      })
-      .catch(err => {
-        console.log(err);
       })
       .catch(err => {
         console.log(err);
@@ -119,18 +116,20 @@ exports.postPostProduct = (req, res) => {
 exports.getDeleteProduct = (req, res) => {
   const productId = req.params.productId;
 
-  Product.findByIdAndDelete(productId)
-    .then(product => {
-      return product;
-    })
+  Product.deleteOne({ _id: productId, userId: req.user._id })
     .then(result => {
+      if(result.deletedCount === 0) {
+        // flash format: ('error',  ['string1', 'string2', ...])
+        req.flash('error', [ 'Product to delete is not found' ]);
+        return res.redirect('/admin');
+      }
+
       Product.find().then(products => {
         res.render(
           'admin/delete-product',
           {
-            pageTitle: 'Product deleted: ',
+            pageTitle: 'Product deleted',
             path: '/admin/delete-product',
-            title: result ? result.title : '',
             products: products
           }
         );
@@ -148,19 +147,40 @@ exports.getDeleteProduct = (req, res) => {
  * @param res
  */
 exports.getAdminProducts = (req, res) => {
+  // flash format: ('error',  ['string1', 'string2', ...])
+  let errorMessage = req.flash('error');
+  let successMessage = req.flash('success');
+
+  if(errorMessage.length > 0) {
+    errorMessage = errorMessage[0];
+  }
+  else {
+    errorMessage = null;
+  }
+
+  if(successMessage.length > 0) {
+    successMessage = successMessage[0];
+  }
+  else {
+    successMessage = null;
+  }
+
   const renderPage = content => {
     res.render(
       'admin/products-list',
       {
         pageTitle: 'Admin area for our amazing shop',
         path: '/admin',
-        products: content
+        products: content,
+        errorMessage: errorMessage,
+        successMessage: successMessage
       }
     );
   };
 
   Product
-    .find() // mongoose provides this method
+    // .find() // mongoose provides this method
+    .find({ userId: req.user._id }) // mongoose provides this method
     .then( products => {
       renderPage(products);
     })

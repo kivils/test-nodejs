@@ -13,7 +13,7 @@
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
             <% if(submitted) { %>
-                <%- include('../_includes/add-new-product') %>
+                <%- include('../_includes/add-new-product-btn') %>
                 <ul class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                     <li class="group relative">
                         <%- include('../_includes/product-item', { product: product, isAdmin: true }) %>

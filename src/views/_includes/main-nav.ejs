@@ -26,7 +26,10 @@
                         <% } %>
                         <div class="flex flex-auto justify-end">
                             <% if(isLogged) { %>
-                                <a href="/users/logout" class="ml-auto text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                                <span class="ml-auto text-gray-300 px-3 py-2 rounded-md text-sm">
+                                    <%= userEmail %>
+                                </span>
+                                <a href="/users/logout" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                                     Logout
                                 </a>
                             <% } else { %>

@@ -15,7 +15,7 @@
             <h2 class="font-sans text-xl text-gray-900 mb-4">
                 <% if(user) { %>
                     <h2 class="font-sans text-xl text-gray-900 mb-4">Update your data</h2>
-                    <%- include('../_includes/user-form.ejs') %>
+                    <%- include('../_includes/user-form.ejs', { user: user }) %>
                 <% } else { %>
                     No user found
                 <% } %>

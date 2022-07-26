@@ -2,15 +2,19 @@
     <input type="hidden" name="_csrf" value="<%= scrfToken %>"/>
     <div class="form-group mb-4">
         <label for="name">Your name</label><br/>
-        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="name" id="name" required/>
+        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="name" id="name" value="<%= user && user.name %>" required/>
     </div>
     <div class="form-group mb-4">
         <label for="username">Pick a username</label><br/>
-        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="username" id="username" required/>
+        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="username" id="username" value="<%= user && user.username %>" required/>
     </div>
     <div class="form-group mb-4">
         <label for="email">Your email</label><br/>
-        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="email" name="email" id="email" required/>
+        <% if(user) { %>
+            <input class="flex-1 block w-full rounded-none sm:text-sm border-gray-300 text-gray-300" type="email" name="email" id="email" value="<%= user && user.email %>" disabled required/>
+        <% } else { %>
+            <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="email" name="email" id="email" required/>
+        <% } %>
     </div>
     <div class="form-group mb-4">
         <label for="password">Password</label><br/>
@@ -20,5 +24,7 @@
         <label for="password_repeat">Password repeat</label><br/>
         <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="password" name="password_repeat" id="password_repeat" required/>
     </div>
-    <button class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">Join us!</button>
+    <button class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">
+        <%= user ? 'Update' : 'Join us!' %>
+    </button>
 </form>

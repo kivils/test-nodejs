@@ -93,7 +93,8 @@ exports.postCreateUsers = (req, res) => {
 exports.getSignup = (req, res) => {
   res.render('users/signup', {
     pageTitle: 'Sign  up',
-    path:'/users/signup'
+    path:'/users/signup',
+    user: null
   })
 };
 
