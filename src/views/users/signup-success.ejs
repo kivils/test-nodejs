@@ -1,0 +1,26 @@
+<%- include('../_includes/head') %>
+
+<%- include('../_includes/main-nav') %>
+
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-900">
+            Wow <span class="text-green-700"><%= username %></span>! Welcome to the club :-) !
+        </h1>
+    </div>
+</header>
+<main>
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <p class="mb-4">
+                Now you are <a class="text-gray-900 underline hover:text-gray-600 hover:no-underline" href="/users">one of us</a>!
+            </p>
+            <h2 class="font-sans text-xl text-gray-900 mb-4">
+                Please login now with your email
+            </h2>
+            <%- include('../_includes/login-form') %>
+        </div>
+    </div>
+</main>
+
+<%- include('../_includes/footer') %>

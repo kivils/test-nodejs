@@ -33,36 +33,19 @@ exports.postCreateUsers = (req, res) => {
     return error.msg + ' (' + error.param + ')';
   });
 
-  User.findOne({ 'email': email })
-    .then(user => {
-      // Existed user
-      if(user) {
-        res.render(
-          'users/create-user',
-          {
-            pageTitle: 'Create user',
-            path: '/users/create-user',
-            user: null,
-            userEmail: email
-          }
-        );
-      }
-      // create a new user
-      else {
-        if(!errors.isEmpty()) {
-          return res.status(422)
-            .render('users/signup', {
-              pageTitle: 'Sign  up',
-              path:'/users/signup',
-              user: null,
-              successMessage: null,
-              errorMessage: errorsMapped.join('; ')
-            })
-        }
+  // Check for existing email is in the routes/user.js
+  if(!errors.isEmpty()) {
+    return res.status(422)
+      .render('users/signup', {
+        pageTitle: 'Sign up',
+        path:'/users/signup',
+        user: null,
+        successMessage: null,
+        errorMessage: errorsMapped.join('; ')
+      })
+  }
 
-        return bcrypt.hash(password, 12);
-      }
-    })
+  bcrypt.hash(password, 12)
     .then(passEncrypted => {
       if(passEncrypted === undefined) {
         return;
@@ -82,20 +65,12 @@ exports.postCreateUsers = (req, res) => {
       user.save()
         .then( user => {
           req.session.user = user;
-          res.render(
-            'users/create-user',
-            {
-              pageTitle: 'User created!',
-              path: '/users/create-user',
-              user: user
-            }
-          );
 
           return transporter.sendMail({
             to: user.email,
             from: 'iuliia.sesiunina@gmx.de',
             subject: 'Sign up successful',
-            html: '<h1>You successfully sign up</h1>'
+            html: '<h1>You successfully signed up</h1>'
           })
         })
         .catch(err => {
@@ -103,6 +78,22 @@ exports.postCreateUsers = (req, res) => {
         });
       })
 
+};
+
+/**
+ * Success signup page
+ * @param req
+ * @param res
+ */
+exports.getSignupSuccess = (req, res) => {
+  res.render(
+    'users/signup-success',
+    {
+      pageTitle: 'User created!',
+      path: '/users/signup-success',
+      username: req.user.username
+    }
+  );
 };
 
 /**
@@ -363,6 +354,12 @@ exports.getNewPassword = ((req, res) => {
 
   User.findOne({ resetToken: token, resetTokenExpire: { $gt: Date.now() }})
     .then(user => {
+      if(!user) {
+        req.flash('error', [ 'Reset link is no longer valid' ]);
+
+        return res.redirect('/');
+      }
+
       res.render('users/new-password', {
         pageTitle: 'New password',
         path: '/users/new-password',

@@ -5,10 +5,18 @@
  */
 exports.getMainPage = (req, res) => {
   // flash format: ('error',  ['string1', 'string2', ...])
-  let success = req.flash('success');
+  let errorMessage = req.flash('error');
+  let successMessage = req.flash('success');
 
-  if(success.length > 0) {
-    successMessage = success[0];
+  if(errorMessage.length > 0) {
+    errorMessage = errorMessage[0];
+  }
+  else {
+    errorMessage = null;
+  }
+
+  if(successMessage.length > 0) {
+    successMessage = successMessage[0];
   }
   else {
     successMessage = null;
@@ -19,7 +27,8 @@ exports.getMainPage = (req, res) => {
       {
         path: '/',
         pageTitle: 'Home page',
-        successMessage: successMessage
+        successMessage: successMessage,
+        errorMessage: errorMessage
       }
   );
 }
