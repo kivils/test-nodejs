@@ -107,7 +107,7 @@ app.use((req, res, next) => {
  */
 app.use((req, res, next) => {
   res.locals.isLogged = req.session.isLogged;
-  res.locals.userEmail = req.session.user.email;
+  res.locals.userEmail = req.session.user ? req.session.user.email : null;
   res.locals.scrfToken = req.csrfToken();
   next();
 })

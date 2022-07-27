@@ -19,3 +19,7 @@ We are building an internet-shop.
 - Storing data in databases
   - MySQL
   - MongoDB
+- Cookies and Sessions
+- User registration, authentication, password resetting, password encryption, CSRF protection
+- Sending emails
+- Forms Validation

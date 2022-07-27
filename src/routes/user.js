@@ -1,4 +1,5 @@
 const express = require('express');
+const { check } = require('express-validator');
 
 const router = express.Router();
 
@@ -9,13 +10,30 @@ const usersController = require('../controllers/users');
  */
 
 // /users/create-user => POST
-router.post('/create-user', usersController.postCreateUsers);
+router.post(
+  '/create-user',
+  check('email').isEmail(),
+  check('password').isLength({ min: 8 }),
+  check('password_repeat').custom((value, { req }) => {
+    if(value !== req.body.password_repeat) {
+      throw new Error('Passwords have to match.');
+    }
+
+    return true;
+  }),
+  usersController.postCreateUsers
+);
 
 // /users/create-user => GET
 router.get('/create-user', usersController.getCreateUsers);
 
 // /users/login => POST
-router.post('/login', usersController.postLogin);
+router.post(
+  '/login',
+  check('email').isEmail(),
+  check('password').isLength({ min: 8 }),
+  usersController.postLogin
+);
 
 // /users/login => GET
 router.get('/login', usersController.getLogin);

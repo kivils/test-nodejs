@@ -2,6 +2,8 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
+const { validationResult } = require('express-validator');
+
 const User = require('../models/user');
 
 /**
@@ -26,8 +28,14 @@ exports.postCreateUsers = (req, res) => {
     password
   } = req.body;
 
+  const errors = validationResult(req);
+  const errorsMapped = errors.array().map(error => {
+    return error.msg + ' (' + error.param + ')';
+  });
+
   User.findOne({ 'email': email })
     .then(user => {
+      // Existed user
       if(user) {
         res.render(
           'users/create-user',
@@ -39,7 +47,19 @@ exports.postCreateUsers = (req, res) => {
           }
         );
       }
+      // create a new user
       else {
+        if(!errors.isEmpty()) {
+          return res.status(422)
+            .render('users/signup', {
+              pageTitle: 'Sign  up',
+              path:'/users/signup',
+              user: null,
+              successMessage: null,
+              errorMessage: errorsMapped.join('; ')
+            })
+        }
+
         return bcrypt.hash(password, 12);
       }
     })
@@ -75,7 +95,7 @@ exports.postCreateUsers = (req, res) => {
             to: user.email,
             from: 'iuliia.sesiunina@gmx.de',
             subject: 'Sign up successful',
-            html: '<h1>You successfully sign</h1>'
+            html: '<h1>You successfully sign up</h1>'
           })
         })
         .catch(err => {
@@ -94,7 +114,9 @@ exports.getSignup = (req, res) => {
   res.render('users/signup', {
     pageTitle: 'Sign  up',
     path:'/users/signup',
-    user: null
+    user: null,
+    successMessage: null,
+    errorMessage: null
   })
 };
 
@@ -154,6 +176,20 @@ exports.getCreateUsers = (req, res) => {
  */
 exports.postLogin = (req, res) => {
   const { email, password } = req.body;
+  const errors = validationResult(req);
+  const errorsMapped = errors.array().map(error => {
+    return error.msg + ' (' + error.param + ')';
+  });
+
+  if(!errors.isEmpty()) {
+    return res.status(422)
+      .render('users/login', {
+        pageTitle: 'Login',
+        path:'/users/login',
+        errorMessage: errorsMapped.join('; '),
+        successMessage: null
+      })
+  }
 
   User.findOne({ email: email})
     .then(user => {
