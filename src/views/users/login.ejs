@@ -19,7 +19,7 @@
                 <% if (successMessage) { %>
                     <p class="text-green-700 mb-4"><%= successMessage %></p>
                 <% } %>
-                <%- include('../_includes/login-form') %>
+                <%- include('../_includes/login-form', { oldInput: oldInput }) %>
             </div>
         </div>
     </div>

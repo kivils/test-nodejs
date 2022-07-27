@@ -25,7 +25,8 @@ exports.postCreateUsers = (req, res) => {
     name,
     username,
     email,
-    password
+    password,
+    password_repeat
   } = req.body;
 
   const errors = validationResult(req);
@@ -39,7 +40,13 @@ exports.postCreateUsers = (req, res) => {
       .render('users/signup', {
         pageTitle: 'Sign up',
         path:'/users/signup',
-        user: null,
+        user: {
+          name: name,
+          username: username,
+          email: email,
+          password: password,
+          password_repeat: password_repeat,
+        },
         successMessage: null,
         errorMessage: errorsMapped.join('; ')
       })
@@ -77,7 +84,6 @@ exports.postCreateUsers = (req, res) => {
           console.log(err);
         });
       })
-
 };
 
 /**
@@ -177,6 +183,10 @@ exports.postLogin = (req, res) => {
       .render('users/login', {
         pageTitle: 'Login',
         path:'/users/login',
+        oldInput: {
+          email: email,
+          password: password
+        },
         errorMessage: errorsMapped.join('; '),
         successMessage: null
       })
@@ -184,13 +194,6 @@ exports.postLogin = (req, res) => {
 
   User.findOne({ email: email})
     .then(user => {
-      if(!user) {
-        // flash format: ('error',  ['string1', 'string2', ...])
-        req.flash('error', [ 'No user with email "' + email + '" found' ]);
-
-        return res.redirect('/users/login');
-      }
-
       bcrypt
         .compare(password, user.password)
         .then(match => { // Both matching and not matching passwords
@@ -208,8 +211,16 @@ exports.postLogin = (req, res) => {
             })
           }
 
-          req.flash('error', [ 'Incorrect password' ]);
-          res.redirect('/users/login')
+          res.render('users/login', {
+            pageTitle: 'Login',
+            path:'/users/login',
+            oldInput: {
+              email: email,
+              password: password
+            },
+            errorMessage: 'Incorrect password',
+            successMessage: null
+          })
         })
         .catch(err => {
           console.log(err);
@@ -247,6 +258,10 @@ exports.getLogin = (req, res) => {
   res.render('users/login', {
     pageTitle: 'Login',
     path:'/users/login',
+    oldInput: {
+      email: '',
+      password: ''
+    },
     errorMessage: errorMessage,
     successMessage: successMessage
   })
@@ -283,6 +298,7 @@ exports.getResetPassword = (req, res) => {
   res.render('users/reset-password', {
     pageTitle: 'Reset Password',
     path:'/users/reset-password',
+    email: '',
     errorMessage: errorMessage
   })
 };
@@ -296,6 +312,7 @@ exports.postResetPassword = ((req, res) => {
   crypto.randomBytes(32, (err, buffer) => {
     if(err) {
       console.log(err);
+      req.flash('error', [ 'Something went wrong. Please try again later.' ]);
 
       return res.redirect('/users/reset-password');
     }
@@ -305,9 +322,12 @@ exports.postResetPassword = ((req, res) => {
     User.findOne({ email: req.body.email })
       .then(user => {
         if(!user) {
-          req.flash('error', [`No account with email '${req.body.email}' found.`]);
-
-          return res.redirect('/users/login');
+          return res.render('users/reset-password', {
+            pageTitle: 'Reset Password',
+            path:'/users/reset-password',
+            email: req.body.email,
+            errorMessage: `No account with email '${req.body.email}' found.`
+          })
         }
 
         user.resetToken = token;
@@ -315,19 +335,21 @@ exports.postResetPassword = ((req, res) => {
 
         return user.save();
       })
-      .then(() => {
-        req.flash('success', [`Email with instructions to reset your password are send to '${req.body.email}'.`]);
-        res.redirect('/');
+      .then(result => {
+        if(result) {
+          req.flash('success', [`Email with instructions to reset your password are send to '${req.body.email}'.`]);
+          res.redirect('/');
 
-        transporter.sendMail({
-          to: req.body.email,
-          from: 'iuliia.sesiunina@gmx.de',
-          subject: 'Reset password',
-          html: `
+          transporter.sendMail({
+            to: req.body.email,
+            from: 'iuliia.sesiunina@gmx.de',
+            subject: 'Reset password',
+            html: `
             <h1>You requested password reset</h1>
             <p>Please follow this <a href="http://localhost:3000/users/new-password/${token}">link</a> to reset your password</p>
           `
-        })
+          })
+        }
       })
       .catch(err => {
         console.log(err);

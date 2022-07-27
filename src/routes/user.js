@@ -46,7 +46,16 @@ router.get('/signup-success', usersController.getSignupSuccess);
 // /users/login => POST
 router.post(
   '/login',
-  check('email').isEmail(),
+  check('email')
+    .isEmail()
+    .custom((value) => {
+      return User.findOne({ 'email': value })
+        .then(user => {
+          if(!user) {
+            return Promise.reject('No user with email "' + value + '" found');
+          }
+        });
+    }),
   usersController.postLogin
 );
 
@@ -65,12 +74,12 @@ router.get('/reset-password', usersController.getResetPassword);
 // // /users/new-password => POST
 router.post(
   '/new-password',
-    check('resetPassword')
+    check('password')
       .isLength({ min: 8 })
       .withMessage('The password should have at least 8 characters'),
-    check('resetPasswordRepeat')
+    check('password_repeat')
       .custom((value, { req }) => {
-        if(value !== req.body.resetPasswordRepeat) {
+        if(value !== req.body.password_repeat) {
           throw new Error('Passwords have to match.');
         }
 
