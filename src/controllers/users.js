@@ -48,7 +48,8 @@ exports.postCreateUsers = (req, res) => {
           password_repeat: password_repeat,
         },
         successMessage: null,
-        errorMessage: errorsMapped.join('; ')
+        errorMessage: errorsMapped.join('; '),
+        validationErrors: errors.array()
       })
   }
 
@@ -113,7 +114,8 @@ exports.getSignup = (req, res) => {
     path:'/users/signup',
     user: null,
     successMessage: null,
-    errorMessage: null
+    errorMessage: null,
+    validationErrors: []
   })
 };
 
@@ -188,7 +190,8 @@ exports.postLogin = (req, res) => {
           password: password
         },
         errorMessage: errorsMapped.join('; '),
-        successMessage: null
+        successMessage: null,
+        validationErrors: errors.array()
       })
   }
 
@@ -219,7 +222,8 @@ exports.postLogin = (req, res) => {
               password: password
             },
             errorMessage: 'Incorrect password',
-            successMessage: null
+            successMessage: null,
+            validationErrors: [{ param: 'password' } ]
           })
         })
         .catch(err => {
@@ -263,7 +267,8 @@ exports.getLogin = (req, res) => {
       password: ''
     },
     errorMessage: errorMessage,
-    successMessage: successMessage
+    successMessage: successMessage,
+    validationErrors: []
   })
 };
 
@@ -387,7 +392,10 @@ exports.getNewPassword = ((req, res) => {
         path: '/users/new-password',
         userId: user._id.toString(),
         resetToken: user.resetToken,
-        errorMessage: errorMessage
+        password: '',
+        password_repeat: '',
+        errorMessage: errorMessage,
+        validationErrors: []
       })
     })
     .catch(err => {
@@ -400,9 +408,29 @@ exports.postNewPassword = ((req, res) => {
   const {
     userId,
     resetToken,
-    resetPassword
+    password,
+    password_repeat
   } = req.body;
   let resetUser;
+  const errors = validationResult(req);
+  const errorsMapped = errors.array().map(error => {
+    return error.msg + ' (' + error.param + ')';
+  });
+
+  if(!errors.isEmpty()) {
+    return res.status(422)
+      .render('users/new-password', {
+        pageTitle: 'New Password',
+        path:'/users/new-password',
+        userId: userId,
+        resetToken: resetToken,
+        password: password,
+        password_repeat: password_repeat,
+        errorMessage: errorsMapped.join('; '),
+        successMessage: null,
+        validationErrors: errors.array()
+      })
+  }
 
   User.findOne({
     resetToken: resetToken,
@@ -412,7 +440,7 @@ exports.postNewPassword = ((req, res) => {
     .then(user => {
       resetUser = user;
 
-      return bcrypt.hash(resetPassword, 12);
+      return bcrypt.hash(password, 12);
     })
     .then(hashedPassword => {
       resetUser.password = hashedPassword;
@@ -423,7 +451,7 @@ exports.postNewPassword = ((req, res) => {
     })
       .then(() => {
         // flash format: ('error',  ['string1', 'string2', ...])
-        req.flash('success', [ 'Your password was successfully changed' ]);
+        req.flash('success', [ 'Your password was successfully changed. Please login with your email' ]);
 
         return res.redirect('/users/login');
       })

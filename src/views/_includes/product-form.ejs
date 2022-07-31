@@ -1,7 +1,7 @@
 <form class="block p-6 rounded-lg shadow-lg bg-white mb-8" action="/admin/post-product" method="POST">
     <input type="hidden" name="product_id" id="product_id"
         <% if(product) { %>
-            value="<%= product._id %>"
+            value="<%= product._id && product._id %>"
         <% } %>
     />
     <input type="hidden" name="_csrf" value="<%= scrfToken %>"/>

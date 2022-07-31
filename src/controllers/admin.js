@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator');
 const Product = require('../models/product');
 
 /**
@@ -15,7 +16,10 @@ exports.getPostProduct = (req, res) => {
         pageTitle: productId ? 'Edit product' : 'Add a new product',
         path: '/admin',
         product: content,
-        submitted: false
+        submitted: false,
+        successMessage: '',
+        errorMessage: '',
+        validationErrors: []
       }
     );
   };
@@ -55,6 +59,11 @@ exports.postPostProduct = (req, res) => {
     product_id
   } = req.body;
 
+  const errors = validationResult(req);
+  const errorsMapped = errors.array().map(error => {
+    return error.msg;
+  });
+
   const renderPage = (content) => {
     res.render(
       'admin/post-product',
@@ -62,12 +71,36 @@ exports.postPostProduct = (req, res) => {
         pageTitle: (product_id ? 'Product updated: ': 'New product added: '),
         product: content,
         path: '/admin',
-        submitted: true
+        submitted: true,
+        successMessage: '',
+        errorMessage: '',
+        validationErrors: []
       }
     );
   }
 
-  // TODO: Check if product with the same title exists and show error
+  if(!errors.isEmpty()) {
+    return res.status(422)
+      .render(
+        'admin/post-product',
+        {
+          pageTitle: (product_id ? 'Error updating product': 'Error adding product'),
+          path: '/admin',
+          product: {
+            _id: product_id || null, // Both for edit and add
+            title: product_title,
+            description: product_description,
+            imgUrl: product_imgUrl,
+            price: product_price,
+          },
+          submitted: false,
+          successMessage: '',
+          errorMessage: errorsMapped.join('; '),
+          validationErrors: errors.array()
+        }
+      )
+  }
+
   // Add a new product
   if(!product_id) {
     const product = new Product({

@@ -5,13 +5,19 @@
 <header class="bg-white shadow">
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold text-gray-900">
-            <%= pageTitle %><% if(product) { %> <span class="text-green-700"> <%= product.title %></span> <% } %>
+            <%= pageTitle %><% if(product && !errorMessage) { %> <span class="text-green-700"> <%= product.title %></span> <% } %>
         </h1>
     </div>
 </header>
 <main>
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
+            <% if (errorMessage) { %>
+                <p class="text-red-700 mb-4"><%= errorMessage %></p>
+            <% } %>
+            <% if (successMessage) { %>
+                <p class="text-green-700 mb-4"><%= successMessage %></p>
+            <% } %>
             <% if(submitted) { %>
                 <%- include('../_includes/add-new-product-btn') %>
                 <ul class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">

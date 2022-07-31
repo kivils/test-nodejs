@@ -15,11 +15,23 @@ router.post(
   '/signup',
   check('email')
     .isEmail()
+    .normalizeEmail()
     .custom((value) => {
       return User.findOne({ 'email': value })
         .then(user => {
           if(user) {
             return Promise.reject('User with email "' + value + '" already exists');
+          }
+        });
+    }),
+  check('username')
+    .isEmail()
+    .normalizeEmail()
+    .custom((value) => {
+      return User.findOne({ 'username': value })
+        .then(user => {
+          if(user) {
+            return Promise.reject('User with username "' + value + '" already exists');
           }
         });
     }),
@@ -48,6 +60,7 @@ router.post(
   '/login',
   check('email')
     .isEmail()
+    .normalizeEmail()
     .custom((value) => {
       return User.findOne({ 'email': value })
         .then(user => {
