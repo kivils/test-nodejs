@@ -1,12 +1,15 @@
 const { validationResult } = require('express-validator');
+const throw500 = require('../middleware/is-500');
 const Product = require('../models/product');
+
 
 /**
  * Product form: add and edit a product
  * @param req
  * @param res
+ * @param next
  */
-exports.getPostProduct = (req, res) => {
+exports.getPostProduct = (req, res, next) => {
   const productId = req.params.productId;
 
   const renderPage = content => {
@@ -35,7 +38,7 @@ exports.getPostProduct = (req, res) => {
         renderPage(product);
       })
       .catch(err => {
-        console.log(err);
+        throw500(err, next);
       });
   }
 
@@ -49,8 +52,9 @@ exports.getPostProduct = (req, res) => {
  * Product form submission: adding and editing a product
  * @param req
  * @param res
+ * @param next
  */
-exports.postPostProduct = (req, res) => {
+exports.postPostProduct = (req, res, next) => {
   const {
     product_title,
     product_description,
@@ -117,7 +121,7 @@ exports.postPostProduct = (req, res) => {
         renderPage(result, false);
       })
       .catch(err => {
-        console.log(err);
+        throw500(err, next);
       })
   }
   // Edit existing product
@@ -136,7 +140,7 @@ exports.postPostProduct = (req, res) => {
         renderPage(result);
       })
       .catch(err => {
-        console.log(err);
+        throw500(err, next);
       })
   }
 }

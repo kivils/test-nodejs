@@ -85,6 +85,16 @@ app.use(
 app.use(csrfProtection);
 
 /**
+ * Middleware to set locals variables to responses
+ */
+app.use((req, res, next) => {
+  res.locals.isLogged = req.session.isLogged;
+  res.locals.userEmail = req.session.user ? req.session.user.email : null;
+  res.locals.scrfToken = req.csrfToken();
+  next();
+})
+
+/**
  * Middleware to set up a user
  */
 app.use((req, res, next) => {
@@ -94,23 +104,17 @@ app.use((req, res, next) => {
 
   User.findById(req.session.user._id)
     .then(user => {
+      if(!user) {
+        return next();
+      }
+
       req.user = user;
       next();
     })
     .catch(err => {
-      console.log(err);
+      throw new Error(err);
     })
 });
-
-/**
- * Middleware to set locals variables to responses
- */
-app.use((req, res, next) => {
-  res.locals.isLogged = req.session.isLogged;
-  res.locals.userEmail = req.session.user ? req.session.user.email : null;
-  res.locals.scrfToken = req.csrfToken();
-  next();
-})
 
 /**
  * Middleware to pass errors to session
@@ -126,9 +130,15 @@ app.use(adminRouter);
 //
 app.use(defaultRouter);
 
+app.use('/error-500', mainController.getErrorPage);
+
 app.use(mainController.getPageNotFound);
 
 //app.use(MongoDbStore)
+
+app.use((error, req, res, next) => {
+  res.redirect('/error-500');
+});
 
 mongoose.connect(MONGODB_URI)
   .then(() => {

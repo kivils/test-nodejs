@@ -49,3 +49,21 @@ exports.getPageNotFound = (req, res) => {
       }
     );
 }
+
+
+/**
+ * Get 500 page
+ * @param req
+ * @param res
+ */
+exports.getErrorPage = (req, res) => {
+  res
+    .status(500)
+    .render(
+      'error-500',
+      {
+        path: '',
+        pageTitle: 'Internal Server Error'
+      }
+    );
+}
