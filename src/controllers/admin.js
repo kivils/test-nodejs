@@ -58,15 +58,16 @@ exports.postPostProduct = (req, res, next) => {
   const {
     product_title,
     product_description,
-    product_imgUrl,
     product_price,
     product_id
   } = req.body;
-
+  const product_img = req.file;
   const errors = validationResult(req);
   const errorsMapped = errors.array().map(error => {
     return error.msg;
   });
+  // TODO: FIX image placeholder in form on file upload
+  const product_imgUrl = (product_img && product_img.path.replace('public', '') || '');
 
   const renderPage = (content) => {
     res.render(
@@ -83,7 +84,13 @@ exports.postPostProduct = (req, res, next) => {
     );
   }
 
-  if(!errors.isEmpty()) {
+  if(
+    !errors.isEmpty() ||
+    (!product_img && !product_id) // adding new product
+  ) {
+    if(!product_img) {
+      errorsMapped.push('Allowed file extensions for "Product Image": png, jpg, jpeg')
+    }
     return res.status(422)
       .render(
         'admin/post-product',

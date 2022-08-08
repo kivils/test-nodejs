@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const multer = require('multer');
 const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -40,6 +41,24 @@ const usersRouter = require('./routes/user');
 const shopRouter = require('./routes/shop');
 const adminRouter = require('./routes/admin');
 
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + '-' + file.originalname);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+    cb(null, true);
+  }
+  else {
+    cb(null, false);
+  }
+}
+
 const app = express();
 const store = new MongoDbStore({
   uri: MONGODB_URI,
@@ -61,6 +80,14 @@ app.use(connectLivereload());
  * Body-parser for requests
  */
 app.use(bodyParser.urlencoded({extended: false}));
+
+/**
+ * Multipart forms parser
+ */
+app.use(multer({
+  storage: fileStorage,
+  fileFilter: fileFilter
+}).single('product_img'));
 
 /**
  * Define path to static resources
@@ -137,6 +164,7 @@ app.use(mainController.getPageNotFound);
 //app.use(MongoDbStore)
 
 app.use((error, req, res, next) => {
+  console.log(error)
   res.redirect('/error-500');
 });
 

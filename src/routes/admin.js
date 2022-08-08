@@ -29,8 +29,6 @@ router.post(
     .isLength({ min: 8, max: 1000 })
     .trim()
     .withMessage('Product description should be of 8 to 1000 characters'),
-    body('product_imgUrl')
-    .trim(),
     body('product_price')
     .trim()
     .isFloat(),

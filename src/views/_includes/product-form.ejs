@@ -1,4 +1,4 @@
-<form class="block p-6 rounded-lg shadow-lg bg-white mb-8" action="/admin/post-product" method="POST">
+<form class="block p-6 rounded-lg shadow-lg bg-white mb-8" action="/admin/post-product" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="product_id" id="product_id"
         <% if(product) { %>
             value="<%= product._id && product._id %>"
@@ -14,8 +14,12 @@
         <textarea class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" name="product_description" id="product_description"><%= product && product.description %></textarea>
     </div>
     <div class="form-group mb-4">
-        <label class="block mb-1" for="product_imgUrl">Product image url</label>
-        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="text" name="product_imgUrl" id="product_imgUrl" value="<%= product && product.imgUrl %>"/>
+        <label class="block mb-1" for="product_img">Product Image</label>
+        <input class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300" type="file" name="product_img" id="product_img" />
+        <!-- TODO: Fix image change on file upload -->
+        <% if(product && product.imgUrl) { %>
+            <p class="mt-2 max-w-xs"><img src="<%= product.imgUrl %>" /></p>
+        <% } %>
     </div>
     <div class="form-group mb-4">
         <label class="block mb-1" for="product_price">Product price</label>
