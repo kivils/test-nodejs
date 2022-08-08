@@ -15,6 +15,9 @@
                 <thead class="bg-white border-b">
                     <tr>
                         <th scope="col" class="text-sm font-medium px-6 py-4 text-left">
+                            #
+                        </th>
+                        <th scope="col" class="text-sm font-medium px-6 py-4 text-left">
                             Date
                         </th>
                         <th scope="col" class="text-sm font-medium px-6 py-4 text-left">
@@ -23,14 +26,20 @@
                         <th scope="col" class="text-sm font-medium px-6 py-4 text-right">
                             Total price
                         </th>
+                        <th scope="col" class="text-sm font-medium px-6 py-4 text-right">
+                            Invoice
+                        </th>
                     </tr>
                 <tbody>
                     <% orders.map(( order, index ) => { %>
                         <tr class="<% if(index % 2) { %>bg-white <% } else { %>bg-gray-100<% } %> border-b">
                             <td class="text-sm font-light px-6 py-4 text-left">
                                 <a href="/shop/orders/<%= order._id %>" class="text-gray-900 underline hover:text-gray-600 hover:no-underline">
-                                    <%= order._id %>
+                                    #<%= index + 1 %>
                                 </a>
+                            </td>
+                            <td class="text-sm font-light px-6 py-4 text-left">
+                                <%= order.date.toLocaleDateString() %>
                             </td>
                             <td class="text-sm font-light px-6 py-4 text-left">
                                 <% order.items.map(item => { %>
@@ -43,6 +52,13 @@
                             </td>
                             <td class="text-sm font-bold px-6 py-4 text-right">
                                 <p>$<%= order.totalPrice %></p>
+                            </td>
+                            <td class="text-sm px-6 py-4 text-right">
+                                <p>
+                                    <a href="/shop/orders/invoices/<%= order._id %>" class="text-gray-900 underline hover:text-gray-600 hover:no-underline">
+                                        Invoice
+                                    </a>
+                                </p>
                             </td>
                         </tr>
                     <% }) %>

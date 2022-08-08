@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const Product = require('../models/product');
 const Order = require('../models/order');
 
@@ -168,7 +171,8 @@ exports.postOrder = (req, res) => {
         user: {
           userId: user._id,
           name: user.name
-        }
+        },
+        date: Date.now()
       });
 
       return order.save();
@@ -222,4 +226,42 @@ exports.getOrder = (req, res) => {
     .catch(err => {
       console.log(err);
     });
+};
+
+/**
+ * Download pdf invoice
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.getInvoice = (req, res, next) => {
+  const orderId = req.params.orderId;
+
+  Order.findById(orderId)
+    .then(order => {
+      if(!order) {
+        return next(new Error('No order found'));
+      }
+
+      if(order.user.userId.toString() !== req.user._id.toString()) {
+        return next(new Error('Unauthorized'));
+      }
+
+      const invoiceName = 'invoice-' + orderId + '.pdf';
+      const invoicePath = path.join('private', 'orders', invoiceName);
+
+      fs.readFile(invoicePath, (err, data) => {
+        if(err) {
+          return next(err);
+        }
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+        res.send(data);
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    })
+
 };

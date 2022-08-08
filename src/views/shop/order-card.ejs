@@ -51,7 +51,12 @@
                     <% }) %>
                     </tbody>
                 </table>
-                <p class="font-bold">Total price: $<%= order.totalPrice %></p>
+                <p class="font-bold mb-4">Total price: $<%= order.totalPrice %></p>
+                <p>
+                    <a href="/shop/orders/invoices/<%= order._id %>" class="text-gray-900 underline hover:text-gray-600 hover:no-underline">
+                        Invoice
+                    </a>
+                </p>
             <% } else { %>
                 <p>Order doesn't exist</p>
             <% } %>
