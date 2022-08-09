@@ -18,6 +18,25 @@
                     </li>
                     <% }) %>
                 </ul>
+                <ul class="my-4 flex">
+                    <% if (hasPrevPage) { %>
+                        <li class="mx-2">
+                            <a href="/shop/?page=<%= prevPage %>">Prev</a>
+                        </li>
+                    <% } %>
+                    <li class="mx-2">
+                        <a href="/shop/?page=1">1</a>
+                    </li>
+                    <li class="mx-2">
+                        <a href="/shop/?page=2">2</a>
+                    </li>
+                    <% if (hasNextPage) { %>
+                        <li class="mx-2">
+                            <a href="/shop/?page=<%= nextPage %>">Next</a>
+                        </li>
+                    <% } %>
+                </ul>
+                <p>Total products: <%=totalItems %></p>
             <% } else { %>
                 <p class="mb-4">No products so far</p>
             <% } %>

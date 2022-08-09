@@ -5,32 +5,50 @@ const PDFDocument = require('pdfkit');
 const Product = require('../models/product');
 const Order = require('../models/order');
 
+const ITEMS_PER_PAGE = process.env.ITEMS_PER_PAGE;
+
 /**
  * List of all products
  * @param req
  * @param res
  */
 exports.getProducts = (req, res) => {
+  const page = req.query.page;
+  let totalItems;
+
   const renderPage = content => {
     res.render(
       'shop/products',
       {
         pageTitle: 'Our amazing shop',
         path: '/shop',
-        products: content
+        products: content,
+        totalItems: totalItems,
+        prevPage: page -1,
+        nextPage: page + 1,
+        hasPrevPage: page > 1,
+        hasNextPage: ITEMS_PER_PAGE * page < totalItems
       }
     );
   };
 
   Product
     .find()// mongoose method
-    .then( products => {
-      renderPage(products);
-    })
-    .catch(err => {
-      console.log(err);
-      renderPage({});
-    });
+      .count()
+      .then(count => {
+        totalItems = count;
+        return Product
+          .find()
+          .skip((page - 1) * ITEMS_PER_PAGE)
+          .limit(ITEMS_PER_PAGE)
+      })
+      .then( products => {
+        renderPage(products);
+      })
+      .catch(err => {
+        console.log(err);
+        renderPage({});
+      });
 };
 
 /**
