@@ -1,4 +1,5 @@
 const { validationResult } = require('express-validator');
+const fileHelper = require('../helpers/file');
 const throw500 = require('../middleware/is-500');
 const Product = require('../models/product');
 
@@ -84,6 +85,7 @@ exports.postPostProduct = (req, res, next) => {
     );
   }
 
+  // TODO: Fix functionality!
   if(
     !errors.isEmpty() ||
     (!product_img && !product_id) // adding new product
@@ -141,6 +143,7 @@ exports.postPostProduct = (req, res, next) => {
         product.imgUrl = product_imgUrl;
         product.price = product_price;
 
+        fileHelper.fileDelete('public' + product.imgUrl); // Remove old image
         return product.save() // mongoose provides save method
       })
       .then(result => {
@@ -168,16 +171,18 @@ exports.getDeleteProduct = (req, res) => {
         return res.redirect('/admin');
       }
 
-      Product.find().then(products => {
-        res.render(
-          'admin/delete-product',
-          {
-            pageTitle: 'Product deleted',
-            path: '/admin/delete-product',
-            products: products
-          }
-        );
-    })
+      Product.find()
+        .then(products => {
+          // fileHelper.fileDelete('public' + product.imgUrl); // Remove an image
+          res.render(
+            'admin/delete-product',
+            {
+              pageTitle: 'Product deleted',
+              path: '/admin/delete-product',
+              products: products
+            }
+          );
+      })
     })
     .catch(err => {
       console.log(err);
