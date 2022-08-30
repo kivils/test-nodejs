@@ -35,7 +35,7 @@ router.post(
   productController.postPostProduct
 );
 
-router.get('/admin/delete-product/:productId', isLogged, productController.getDeleteProduct);
+router.delete('/admin/product/:productId', isLogged, productController.getDeleteProduct);
 
 router.use('/admin', isLogged, productController.getAdminProducts);
 

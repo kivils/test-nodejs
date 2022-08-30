@@ -17,11 +17,11 @@
                 <p class="text-green-700 mb-4"><%= successMessage %></p>
             <% } %>
             <%- include('../_includes/add-new-product-btn') %>
-            <% if(products.length) {%>
+            <% if(products.length) { %>
                 <h2 class="font-sans text-xl text-gray-900 mb-4">Products already added:</h2>
                 <ul class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                     <% products.map(product => { %>
-                    <li class="group relative">
+                    <li class="l-product group relative">
                         <%- include('../_includes/product-item', { product: product, isAdmin: true }) %>
                     </li>
                     <% }) %>
@@ -35,4 +35,5 @@
 
 </main>
 
+<script src="/js/admin.js"></script>
 <%- include('../_includes/footer') %>

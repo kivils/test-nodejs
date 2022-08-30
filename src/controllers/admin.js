@@ -175,19 +175,12 @@ exports.getDeleteProduct = (req, res) => {
       Product.find()
         .then(products => {
           // fileHelper.fileDelete('public' + product.imgUrl); // Remove an image
-          res.render(
-            'admin/delete-product',
-            {
-              pageTitle: 'Product deleted',
-              path: '/admin/delete-product',
-              products: products
-            }
-          );
+          res.status(200).json({ message: 'Product deleted' });
       })
     })
     .catch(err => {
       console.log(err);
-      res.redirect('/admin');
+      res.status(500).json({ message: 'Deleting product failed' });
     })
 };
 
