@@ -13,7 +13,7 @@ const ITEMS_PER_PAGE = process.env.ITEMS_PER_PAGE;
  * @param res
  */
 exports.getProducts = (req, res) => {
-  const page = req.query.page;
+  const currentPage = Number(req.query.page) || 1;
   let totalItems;
 
   const renderPage = content => {
@@ -24,22 +24,24 @@ exports.getProducts = (req, res) => {
         path: '/shop',
         products: content,
         totalItems: totalItems,
-        prevPage: page -1,
-        nextPage: page + 1,
-        hasPrevPage: page > 1,
-        hasNextPage: ITEMS_PER_PAGE * page < totalItems
+        currentPage: currentPage,
+        totalPages: Math.ceil(totalItems / ITEMS_PER_PAGE),
+        prevPage: currentPage - 1,
+        nextPage: currentPage + 1,
+        hasPrevPage: currentPage > 1,
+        hasNextPage: ITEMS_PER_PAGE * currentPage < totalItems
       }
     );
   };
 
   Product
     .find()// mongoose method
-      .count()
+      .countDocuments()
       .then(count => {
         totalItems = count;
         return Product
           .find()
-          .skip((page - 1) * ITEMS_PER_PAGE)
+          .skip((currentPage - 1) * ITEMS_PER_PAGE)
           .limit(ITEMS_PER_PAGE)
       })
       .then( products => {
