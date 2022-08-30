@@ -26,6 +26,7 @@
                     </li>
                     <% }) %>
                 </ul>
+                <%- include('../_includes/pagination', { products: products, pagination: pagination }) %>
             <% } else { %>
                 <p class="mb-4">No products so far</p>
             <% } %>

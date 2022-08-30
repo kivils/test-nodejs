@@ -23,13 +23,15 @@ exports.getProducts = (req, res) => {
         pageTitle: 'Our amazing shop',
         path: '/shop',
         products: content,
-        totalItems: totalItems,
-        currentPage: currentPage,
-        totalPages: Math.ceil(totalItems / ITEMS_PER_PAGE),
-        prevPage: currentPage - 1,
-        nextPage: currentPage + 1,
-        hasPrevPage: currentPage > 1,
-        hasNextPage: ITEMS_PER_PAGE * currentPage < totalItems
+        pagination: {
+          totalItems: totalItems,
+          currentPage: currentPage,
+          totalPages: Math.ceil(totalItems / ITEMS_PER_PAGE),
+          prevPage: currentPage - 1,
+          nextPage: currentPage + 1,
+          hasPrevPage: currentPage > 1,
+          hasNextPage: ITEMS_PER_PAGE * currentPage < totalItems
+        }
       }
     );
   };

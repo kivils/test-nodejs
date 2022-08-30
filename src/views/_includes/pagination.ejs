@@ -1,0 +1,20 @@
+<% if (pagination.totalPages > 1) { %>
+    <ul class="my-4 flex">
+        <% if (pagination.hasPrevPage) { %>
+            <li class="mx-2">
+                <a href="?page=<%= pagination.prevPage %>">Prev</a>
+            </li>
+        <% } %>
+        <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+            <li class="mx-2<% if(i === pagination.currentPage) { %> font-bold <% } %>">
+                <a href="?page=<%= i %>"><%= i %></a>
+            </li>
+        <% } %>
+        <% if (pagination.hasNextPage) { %>
+            <li class="mx-2">
+                <a href="?page=<%= pagination.nextPage %>">Next</a>
+            </li>
+        <% } %>
+    </ul>
+<% } %>
+<p class="my-4">Total products: <%= pagination.totalItems %></p>

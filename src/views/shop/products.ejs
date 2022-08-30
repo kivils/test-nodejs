@@ -18,26 +18,7 @@
                     </li>
                     <% }) %>
                 </ul>
-                <% if (totalPages > 1) { %>
-                    <ul class="my-4 flex">
-                        <% if (hasPrevPage) { %>
-                            <li class="mx-2">
-                                <a href="/shop/?page=<%= prevPage %>">Prev</a>
-                            </li>
-                        <% } %>
-                        <% for (let i = 1; i <= totalPages; i++) { %>
-                            <li class="mx-2<% if(i === currentPage) { %> font-bold <% } %>">
-                                <a href="/shop/?page=<%= i %>"><%= i %></a>
-                            </li>
-                        <% } %>
-                        <% if (hasNextPage) { %>
-                            <li class="mx-2">
-                                <a href="/shop/?page=<%= nextPage %>">Next</a>
-                            </li>
-                        <% } %>
-                    </ul>
-                <% } %>
-                <p class="my-4">Total products: <%=totalItems %></p>
+                <%- include('../_includes/pagination', { products: products, pagination: pagination }) %>
             <% } else { %>
                 <p class="mb-4">No products so far</p>
             <% } %>

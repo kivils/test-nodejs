@@ -3,6 +3,7 @@ const fileHelper = require('../helpers/file');
 const throw500 = require('../middleware/is-500');
 const Product = require('../models/product');
 
+const ITEMS_PER_PAGE = process.env.ITEMS_PER_PAGE;
 
 /**
  * Product form: add and edit a product
@@ -196,6 +197,8 @@ exports.getDeleteProduct = (req, res) => {
  * @param res
  */
 exports.getAdminProducts = (req, res) => {
+  const currentPage = Number(req.query.page) || 1;
+  let totalItems;
   // flash format: ('error',  ['string1', 'string2', ...])
   let errorMessage = req.flash('error');
   let successMessage = req.flash('success');
@@ -222,14 +225,30 @@ exports.getAdminProducts = (req, res) => {
         path: '/admin',
         products: content,
         errorMessage: errorMessage,
-        successMessage: successMessage
+        successMessage: successMessage,
+        pagination: {
+          totalItems: totalItems,
+          currentPage: currentPage,
+          totalPages: Math.ceil(totalItems / ITEMS_PER_PAGE),
+          prevPage: currentPage - 1,
+          nextPage: currentPage + 1,
+          hasPrevPage: currentPage > 1,
+          hasNextPage: ITEMS_PER_PAGE * currentPage < totalItems
+        }
       }
     );
   };
 
   Product
-    // .find() // mongoose provides this method
     .find({ userId: req.user._id }) // mongoose provides this method
+    .countDocuments()
+    .then(count => {
+      totalItems = count;
+      return Product
+        .find()
+        .skip((currentPage - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE)
+    })
     .then( products => {
       renderPage(products);
     })

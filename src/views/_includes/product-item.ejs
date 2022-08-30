@@ -1,5 +1,5 @@
 <div class="t-products__itemInner bg-white shadow-xl rounded p-4">
-    <a class="t-products__link" href="/shop/<%= product._id %>">
+    <a class="t-products__link" href="/<% if(isAdmin) { %>admin<% } else { %>shop<% } %>/<%= product._id %>">
         <h2 class="text-gray-900 text-lg mb-4"><%=product.title%></h2>
         <div class="t-products__img-wrapper mb-4">
             <img class="t-products__img" src="<%= product.imgUrl || 'https://cdn.pixabay.com/photo/2013/07/12/18/22/t-shirt-153370_960_720.png' %>" alt="<%= product.title %>"/>
