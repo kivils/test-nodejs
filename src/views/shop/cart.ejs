@@ -91,15 +91,17 @@
                     <p class="text-right font-bold mb-4">Total price: $<%= cart.totalPrice %></p>
                     <hr class="mb-4" />
                     <div class="text-right">
-                        <form action="/shop/orders" method="POST">
-                            <input type="hidden" name="_csrf" value="<%= scrfToken %>"/>
+                        <a href="/shop/checkout">
                             <button class="px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit">
                                 Proceed to checkout
                             </button>
-                        </form>
+                        </a>
                     </div>
                 <% } else { %>
-                    <p>no</p>
+                    <p class="mb-4">No products in the card so far.</p>
+                    <p class="mb-4">
+                        Please check our <a class="text-gray-900 underline hover:text-gray-600 hover:no-underline" href="/shop">catalog of great products</a>!
+                    </p>
                 <% } %>
             </div>
         </div>

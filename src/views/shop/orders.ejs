@@ -15,9 +15,6 @@
                 <thead class="bg-white border-b">
                     <tr>
                         <th scope="col" class="text-sm font-medium px-6 py-4 text-left">
-                            #
-                        </th>
-                        <th scope="col" class="text-sm font-medium px-6 py-4 text-left">
                             Date
                         </th>
                         <th scope="col" class="text-sm font-medium px-6 py-4 text-left">
@@ -35,11 +32,8 @@
                         <tr class="<% if(index % 2) { %>bg-white <% } else { %>bg-gray-100<% } %> border-b">
                             <td class="text-sm font-light px-6 py-4 text-left">
                                 <a href="/shop/orders/<%= order._id %>" class="text-gray-900 underline hover:text-gray-600 hover:no-underline">
-                                    #<%= index + 1 %>
+                                    <%= order.date.toLocaleDateString() %>
                                 </a>
-                            </td>
-                            <td class="text-sm font-light px-6 py-4 text-left">
-                                <%= order.date.toLocaleDateString() %>
                             </td>
                             <td class="text-sm font-light px-6 py-4 text-left">
                                 <% order.items.map(item => { %>

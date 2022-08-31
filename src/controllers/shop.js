@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
+const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 const Product = require('../models/product');
 const Order = require('../models/order');
@@ -167,18 +168,57 @@ exports.postUpdateAmountInCart = (req, res) => {
  * @param res
  */
 exports.getCheckout = (req, res) => {
-  res.render('shop/checkout', {
-    pageTitle: 'You are one step away from having pour amazing products!',
-    path: '/shop/checkout'
-  });
+  let products;
+  let totalPrice = 0;
+
+  req.user.cart.items.length ?
+    req.user
+      .populate('cart.items.productId')
+        .then(user => {
+          products = user.cart.items;
+          totalPrice = user.cart.totalPrice;
+
+          return stripe.checkout.sessions.create({
+            payment_method_types: [ 'card' ],
+            mode: "payment",
+            line_items: products.map(p => {
+              return {
+                price_data: {
+                  currency: 'usd',
+                  unit_amount: p.productId.price * 100,
+                  product_data: {
+                    name: p.productId.title,
+                    description: p.productId.description
+                  }
+                },
+                quantity: p.quantity,
+              }
+            }),
+            success_url: req.protocol + '://' + req.get('host') + '/shop/checkout/success',
+            cancel_url: req.protocol + '://' + req.get('host') + '/shop/checkout/cancel'
+          });
+        })
+        .then(session => {
+          res.render('shop/checkout', {
+            pageTitle: 'You are one step away from having your amazing products!',
+            path: '/shop/checkout',
+            products: products,
+            totalPrice: totalPrice,
+            sessionId: session.id
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      : res.status(200).redirect('/');
 };
 
 /**
- * Add cart to Order (POST request)
+ * Success page after successful payment via STRIPE
  * @param req
  * @param res
  */
-exports.postOrder = (req, res) => {
+exports.getCheckoutSuccess = (req, res) => {
   req.user
     .populate('cart.items.productId')
     .then(user => {
@@ -218,6 +258,7 @@ exports.postOrder = (req, res) => {
  */
 exports.getOrders = (req, res) => {
   Order.find({ 'user.userId': req.user._id })
+    .sort({ date: -1 })
     .then(orders => {
       res.render('shop/orders', {
         pageTitle: 'Your orders',
