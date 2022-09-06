@@ -40,6 +40,7 @@ const defaultRouter = require('./routes/index');
 const usersRouter = require('./routes/user');
 const shopRouter = require('./routes/shop');
 const adminRouter = require('./routes/admin');
+const feedRouter = require('./routes/feed');
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -79,7 +80,18 @@ app.use(connectLivereload());
 /**
  * Body-parser for requests
  */
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: false})); // x-www-form-urlencoded
+app.use(bodyParser.json()); // application/json
+
+/**
+ * Set headers for API server
+ */
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 /**
  * Multipart forms parser
@@ -109,7 +121,7 @@ app.use(
 /**
  * Middleware for CSRF protection
  */
-app.use(csrfProtection);
+// app.use(csrfProtection);
 
 /**
  * Middleware to set locals variables to responses
@@ -117,7 +129,7 @@ app.use(csrfProtection);
 app.use((req, res, next) => {
   res.locals.isLogged = req.session.isLogged;
   res.locals.userEmail = req.session.user ? req.session.user.email : null;
-  res.locals.scrfToken = req.csrfToken();
+  // res.locals.scrfToken = req.csrfToken();
   next();
 })
 
@@ -154,6 +166,7 @@ app.use(flash());
 app.use('/users', usersRouter);
 app.use(shopRouter);
 app.use(adminRouter);
+app.use(feedRouter);
 //
 app.use(defaultRouter);
 
