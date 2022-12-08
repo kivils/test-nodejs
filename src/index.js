@@ -121,7 +121,7 @@ app.use(
 /**
  * Middleware for CSRF protection
  */
-// app.use(csrfProtection);
+app.use(csrfProtection);
 
 /**
  * Middleware to set locals variables to responses
@@ -129,7 +129,7 @@ app.use(
 app.use((req, res, next) => {
   res.locals.isLogged = req.session.isLogged;
   res.locals.userEmail = req.session.user ? req.session.user.email : null;
-  // res.locals.scrfToken = req.csrfToken();
+  res.locals.scrfToken = req.csrfToken();
   next();
 })
 

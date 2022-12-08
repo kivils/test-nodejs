@@ -38,7 +38,7 @@
                             <td class="text-sm font-light px-6 py-4 text-left">
                                 <% order.items.map(item => { %>
                                     <p>
-                                        <a href="/shop/<%= item.id %>" class="text-gray-900 underline hover:text-gray-600 hover:no-underline">
+                                        <a href="/shop/<%= item.productId._id %>" class="text-gray-900 underline hover:text-gray-600 hover:no-underline">
                                             <%= item.productId.title %> (<%= item.quantity %>)
                                         </a>
                                     </p>
