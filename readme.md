@@ -23,3 +23,9 @@ We are building an internet-shop.
 - User registration, authentication, password resetting, password encryption, CSRF protection
 - Sending emails
 - Forms Validation
+- File uploading
+- Pagination
+- Async requests
+- Stripe for payment functionality
+- REST API
+- ...
